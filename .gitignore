@@ -7,7 +7,8 @@ __pycache__/
 *.py[cod]
 
 # Project Data (Large Files)
-data/chroma_store/
+data/chroma_store/*
+!data/chroma_store/chroma.sqlite3_chunks/
 
 # OS
 .DS_Store
