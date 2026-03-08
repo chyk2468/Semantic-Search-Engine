@@ -94,7 +94,7 @@ The backend and frontend can be started together or separately.
 ### 3. Search Interface Overview
 The main interface allows for natural language queries.
 ![UI Overview](screenshots/Screenshot%202026-03-08%20173924.png)
-*   **Step:** Open `http://localhost:5173` to access the Semantic Search Engine UI.
+*   **Step:** Open `http://localhost:8000` to access the Semantic Search Engine UI.
 
 ### 4. Performing a Semantic Search
 Enter a query to find relevant documents based on meaning rather than just keywords.
