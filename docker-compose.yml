@@ -13,6 +13,7 @@ services:
       # Disable ChromaDB telemetry to prevent 'Failed to send telemetry event' errors
       - ANONYMIZED_TELEMETRY=FALSE
       - CHROMA_TELEMETRY_IMPL=none
+      - PYTHONUNBUFFERED=1
     # Automatically restart the service unless it's explicitly stopped.
     restart: unless-stopped
 

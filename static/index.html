@@ -3,102 +3,267 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trademarkia Semantic Search</title>
+    <title>Semantic Search Engine | Trademarkia</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: #f8fafc; }
-        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .result-enter { animation: slideIn 0.3s ease-out forwards; }
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(10px); }
+        :root {
+            --primary: #3b82f6;
+            --primary-glow: rgba(59, 130, 246, 0.5);
+            --bg-dark: #020617;
+            --surface-dark: #0f172a;
+            --border-dark: #1e293b;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-dark);
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        .glass {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .search-container {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .search-container:focus-within {
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px var(--primary-glow);
+            border-color: var(--primary);
+        }
+
+        .result-card {
+            transition: all 0.3s ease;
+            animation: slideUp 0.5s ease-out forwards;
+            opacity: 0;
+        }
+
+        .result-card:hover {
+            border-color: rgba(59, 130, 246, 0.3);
+            background: rgba(30, 41, 59, 0.4);
+            transform: scale(1.01);
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
         .loader {
-            border: 3px solid rgba(255,255,255,0.1);
-            border-bottom-color: #3b82f6;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-bottom-color: white;
             border-radius: 50%;
             display: inline-block;
-            box-sizing: border-box;
             animation: rotation 1s linear infinite;
         }
-        @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        @keyframes rotation {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #60a5fa 0%, #34d399 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-dark);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #334155;
+        }
+
+        .badge-hit {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .badge-miss {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center pt-16 px-4 pb-16">
-    <div class="w-full max-w-4xl glass rounded-2xl p-8 shadow-2xl mb-8">
-        <div class="flex justify-between items-center mb-8">
-            <h1 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400">
-                Semantic Search Engine
+<body class="min-h-screen pb-20">
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-40 w-full border-b border-white/5 bg-slate-950/50 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                    <i data-lucide="search" class="w-5 h-5 text-white"></i>
+                </div>
+                <span class="text-xl font-bold tracking-tight">Semantic<span class="text-blue-500">Search</span></span>
+            </div>
+            <div class="flex items-center gap-3">
+                <button onclick="fetchStats()" class="p-2 hover:bg-white/5 rounded-lg transition-colors group relative" title="Cache Statistics">
+                    <i data-lucide="bar-chart-3" class="w-5 h-5 text-slate-400 group-hover:text-white"></i>
+                </button>
+                <button onclick="clearCache()" class="p-2 hover:bg-red-500/10 rounded-lg transition-colors group" title="Clear Cache">
+                    <i data-lucide="trash-2" class="w-5 h-5 text-slate-400 group-hover:text-red-400"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="max-w-4xl mx-auto pt-20 px-4">
+        <div class="text-center mb-12">
+            <h1 class="text-5xl font-extrabold mb-4 tracking-tight">
+                Discover Intelligence with <span class="gradient-text">Semantic Search</span>
             </h1>
-            <div class="flex gap-4">
-                <button onclick="fetchStats()" class="text-sm px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg transition-colors border border-slate-700">Cache Stats</button>
-                <button onclick="clearCache()" class="text-sm px-4 py-2 bg-red-900/50 hover:bg-red-900/80 text-red-200 rounded-lg transition-colors border border-red-800/50">Clear Cache</button>
+            <p class="text-slate-400 text-lg">
+                High-performance vector retrieval with sub-millisecond semantic caching.
+            </p>
+        </div>
+
+        <!-- Search Box -->
+        <div class="relative max-w-2xl mx-auto mb-16">
+            <form onsubmit="handleSearch(event)" class="group">
+                <div class="search-container flex items-center bg-slate-900/50 border border-slate-700/50 rounded-2xl p-2 focus-within:bg-slate-900">
+                    <div class="pl-4 pr-2">
+                        <i data-lucide="search" class="w-6 h-6 text-slate-500"></i>
+                    </div>
+                    <input type="text" id="searchInput" 
+                        placeholder="What are you looking for today?" 
+                        class="w-full bg-transparent border-none py-3 text-lg focus:ring-0 placeholder-slate-500 text-slate-200"
+                        required minlength="3">
+                    <button type="submit" id="searchBtn" 
+                        class="bg-blue-600 hover:bg-blue-500 text-white px-8 py-3 rounded-xl font-semibold transition-all shadow-lg shadow-blue-900/20 active:scale-95 flex items-center gap-2">
+                        <span>Search</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Results Area -->
+        <div id="resultsContainer" class="hidden space-y-8 animate-in fade-in duration-500">
+            <!-- Summary Header -->
+            <div class="glass rounded-2xl p-6 flex flex-wrap items-center justify-between gap-6 border-blue-500/10">
+                <div class="flex items-center gap-4">
+                    <div id="badgeCache" class="px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider"></div>
+                    <div class="h-8 w-px bg-slate-800"></div>
+                    <div class="flex items-center gap-3 text-sm">
+                        <div class="flex items-center gap-2 text-slate-400">
+                            <i data-lucide="folder" class="w-4 h-4"></i>
+                            <span>Topic: <span id="clusterName" class="text-white font-semibold"></span></span>
+                        </div>
+                        <div class="flex items-center gap-2 text-slate-400">
+                            <i data-lucide="clock" class="w-4 h-4"></i>
+                            <span><span id="responseTime" class="text-white font-semibold"></span>ms</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex-1 min-w-[200px]">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-[10px] text-slate-500 uppercase font-bold">Semantic Distribution</span>
+                    </div>
+                    <div id="distributionBar" class="flex h-1.5 w-full rounded-full overflow-hidden bg-slate-800/50">
+                        <!-- Segments injected here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Matched Cache Info -->
+            <div id="matchedQueryContainer" class="hidden bg-blue-500/5 border border-blue-500/20 rounded-2xl p-6">
+                <div class="flex items-start gap-4">
+                    <div class="p-2 bg-blue-500/10 rounded-lg">
+                        <i data-lucide="zap" class="w-5 h-5 text-blue-400"></i>
+                    </div>
+                    <div>
+                        <span class="text-[10px] text-blue-400 uppercase font-bold tracking-widest">Matched Cache Query</span>
+                        <p id="matchedQueryText" class="text-lg text-slate-200 mt-1 font-medium italic"></p>
+                        <div class="mt-2 flex items-center gap-2">
+                            <div class="w-32 h-1 bg-slate-800 rounded-full overflow-hidden">
+                                <div id="simScoreBar" class="h-full bg-blue-500"></div>
+                            </div>
+                            <span class="text-xs text-slate-500"><span id="simScore" class="text-blue-400 font-bold"></span> similarity</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Result -->
+            <div id="mainResult" class="glass rounded-2xl p-8 border-l-4 border-l-blue-500">
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="text-[10px] bg-blue-500/10 text-blue-400 px-2 py-0.5 rounded uppercase font-bold">Top Response</span>
+                </div>
+                <div id="textContent" class="text-slate-200 text-lg leading-relaxed whitespace-pre-wrap"></div>
+            </div>
+
+            <!-- Detailed Matches -->
+            <div class="space-y-4">
+                <h3 class="text-sm font-bold text-slate-500 uppercase tracking-widest pl-2">Supporting Sources</h3>
+                <div id="detailsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Cards injected here -->
+                </div>
             </div>
         </div>
 
-        <form id="searchForm" class="relative mb-8" onsubmit="handleSearch(event)">
-            <input type="text" id="searchInput" placeholder="Ask anything... e.g. What is the latest news about space exploration?" 
-                class="w-full bg-slate-900/50 border border-slate-700 rounded-xl py-4 pl-6 pr-16 text-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all placeholder-slate-500"
-                required minlength="3">
-            <button type="submit" id="searchBtn" class="absolute right-3 top-3 bottom-3 bg-blue-600 hover:bg-blue-500 text-white px-6 rounded-lg font-medium transition-colors flex items-center justify-center min-w-[100px]">
-                Search
-            </button>
-        </form>
-
-        <div id="resultsContainer" class="hidden space-y-6">
-            <div class="flex flex-wrap items-center gap-4 text-sm text-slate-400 border-b border-slate-800 pb-4">
-                <div id="badgeCache" class="px-3 py-1 rounded-full text-xs font-semibold"></div>
-                <div id="clusterInfo" class="flex items-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-                    <span>Topic: <span id="clusterName" class="text-white font-medium"></span></span>
-                    <span class="text-[10px] bg-slate-800 px-2 py-0.5 rounded text-slate-500 ml-1">ID: <span id="clusterId"></span></span>
-                </div>
-                <div class="flex items-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    <span>Time: <span id="responseTime" class="text-white font-medium"></span>ms</span>
-                </div>
+        <!-- Initial State -->
+        <div id="initialState" class="py-20 text-center">
+            <div class="w-20 h-20 bg-slate-900 rounded-3xl flex items-center justify-center mx-auto mb-6 border border-slate-800">
+                <i data-lucide="sparkles" class="w-10 h-10 text-blue-500"></i>
             </div>
-            
-            <div id="matchedQueryContainer" class="hidden bg-slate-800/50 border border-slate-700 rounded-lg p-4 mb-4">
-                <span class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Matched Cached Query</span>
-                <p id="matchedQueryText" class="text-blue-300 mt-1 italic"></p>
-                <div id="simScoreContainer" class="text-xs text-slate-500 mt-1">Similarity: <span id="simScore" class="text-blue-400"></span></div>
-            </div>
-
-            <!-- Cluster Distribution Visualization -->
-            <div class="bg-slate-900/30 p-4 rounded-xl border border-slate-800/50">
-                <span class="text-xs text-slate-500 uppercase tracking-wider font-semibold block mb-2">Cluster Distribution (Fuzzy Membership)</span>
-                <div id="distributionBar" class="flex h-2 w-full rounded-full overflow-hidden bg-slate-800">
-                    <!-- Bars injected here -->
-                </div>
-            </div>
-
-            <div id="textContent" class="text-slate-300 leading-relaxed font-mono text-sm result-enter"></div>
+            <p class="text-slate-500 max-w-xs mx-auto">
+                Enter a query to explore the semantic dataset and see the cache in action.
+            </p>
         </div>
     </div>
 
-    <!-- Modal for Stats -->
-    <div id="statsModal" class="fixed inset-0 bg-black/80 flex items-center justify-center hidden z-50 backdrop-blur-sm">
-        <div class="glass p-8 rounded-2xl w-full max-w-md relative">
-            <button onclick="closeStats()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl">✕</button>
-            <h2 class="text-2xl font-bold mb-6">Cache Statistics</h2>
-            <div id="statsContent" class="space-y-4 font-mono text-sm text-slate-300">
-                <!-- Stats will be injected here -->
+    <!-- Stats Modal -->
+    <div id="statsModal" class="fixed inset-0 bg-black/80 flex items-center justify-center hidden z-50 backdrop-blur-xl">
+        <div class="glass p-8 rounded-3xl w-full max-w-md relative border-white/10">
+            <button onclick="closeStats()" class="absolute top-6 right-6 text-slate-500 hover:text-white transition-colors">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+            <h2 class="text-2xl font-bold mb-8 flex items-center gap-3">
+                <i data-lucide="database" class="w-6 h-6 text-blue-500"></i>
+                Cache System Health
+            </h2>
+            <div id="statsContent" class="space-y-6">
+                <!-- Stats injected here -->
             </div>
         </div>
     </div>
 
     <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
         async function handleSearch(e) {
             e.preventDefault();
             const input = document.getElementById('searchInput').value;
             const btn = document.getElementById('searchBtn');
             const container = document.getElementById('resultsContainer');
+            const initial = document.getElementById('initialState');
             
-            btn.innerHTML = '<span class="loader w-5 h-5"></span>';
+            btn.innerHTML = '<span class="loader"></span>';
             btn.disabled = true;
-            container.classList.add('hidden');
             
             try {
                 const res = await fetch('/query', {
@@ -110,67 +275,78 @@
                 if (!res.ok) throw new Error('Search failed');
                 const data = await res.json();
                 
-                // Update Badge & Headers
+                initial.classList.add('hidden');
+                container.classList.remove('hidden');
+
+                // Update Cache Status
                 const badge = document.getElementById('badgeCache');
+                const matchedQueryContainer = document.getElementById('matchedQueryContainer');
+                
                 if (data.cache_hit) {
-                    badge.textContent = '⚡ CACHE HIT';
-                    badge.className = 'px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30';
-                    document.getElementById('matchedQueryContainer').classList.remove('hidden');
+                    badge.textContent = 'Cache Hit';
+                    badge.className = 'px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider badge-hit flex items-center gap-2';
+                    badge.innerHTML = '<i data-lucide="zap" class="w-3 h-3"></i> Cache Hit';
+                    
+                    matchedQueryContainer.classList.remove('hidden');
                     document.getElementById('matchedQueryText').textContent = `"${data.matched_query}"`;
-                    document.getElementById('simScore').textContent = data.similarity_score;
+                    document.getElementById('simScore').textContent = `${(data.similarity_score * 100).toFixed(1)}%`;
+                    document.getElementById('simScoreBar').style.width = `${data.similarity_score * 100}%`;
                 } else {
-                    badge.textContent = '🔍 VECTOR SEARCH (MISS)';
-                    badge.className = 'px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/20 text-blue-400 border border-blue-500/30';
-                    document.getElementById('matchedQueryContainer').classList.add('hidden');
+                    badge.textContent = 'Vector Search';
+                    badge.className = 'px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider badge-miss flex items-center gap-2';
+                    badge.innerHTML = '<i data-lucide="search" class="w-3 h-3"></i> Vector Search';
+                    matchedQueryContainer.classList.add('hidden');
                 }
                 
-                document.getElementById('clusterId').textContent = data.dominant_cluster;
                 document.getElementById('clusterName').textContent = data.dominant_cluster_name;
                 document.getElementById('responseTime').textContent = data.response_time_ms;
 
-                // Update Distribution Bar
+                // Update Distribution
                 const distBar = document.getElementById('distributionBar');
                 distBar.innerHTML = '';
                 const colors = ['bg-blue-500', 'bg-emerald-500', 'bg-purple-500', 'bg-amber-500', 'bg-rose-500', 'bg-indigo-500', 'bg-cyan-500'];
                 data.cluster_distribution.forEach((val, i) => {
-                    if (val > 0.05) {
+                    if (val > 0.02) {
                         const segment = document.createElement('div');
-                        segment.className = `${colors[i % colors.length]} h-full transition-all duration-500`;
-                        segment.style.width = `${val * 100}%`;
-                        segment.title = `Cluster ${i}: ${(val * 100).toFixed(1)}%`;
+                        segment.className = `${colors[i % colors.length]} h-full transition-all duration-700 ease-out`;
+                        segment.style.width = '0%';
                         distBar.appendChild(segment);
+                        setTimeout(() => segment.style.width = `${val * 100}%`, 50);
                     }
                 });
                 
-                // Render Results
-                let formattedHtml = `
-                    <div class="mb-6 bg-slate-900/80 p-6 rounded-xl border border-blue-500/30 result-enter">
-                        <div class="text-xs text-blue-400 font-bold uppercase tracking-widest mb-2">Clean Result Summary</div>
-                        <div class="text-slate-200 whitespace-pre-wrap break-all font-sans leading-relaxed">${data.result.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>
-                    </div>
-                    <div class="mt-8">
-                        <h3 class="text-sm font-bold text-slate-500 uppercase tracking-widest mb-4">Detailed Matches</h3>
-                        ${data.results_detail.map((item, idx) => `
-                            <div class="mb-4 bg-slate-900/40 p-5 rounded-lg border border-slate-800 result-enter" style="animation-delay: ${idx * 0.1}s">
-                                <div class="flex justify-between items-start mb-2 border-b border-slate-800 pb-2">
-                                    <span class="text-[10px] text-slate-500">ID: ${item.id}</span>
-                                    <span class="text-[10px] font-bold text-emerald-500">${(item.similarity * 100).toFixed(1)}% SIM</span>
-                                </div>
-                                <div class="text-slate-400 text-xs whitespace-pre-wrap break-all">${item.text.substring(0, 300).replace(/</g, '&lt;').replace(/>/g, '&gt;')}...</div>
-                                <div class="mt-2 flex gap-3 text-[9px] text-slate-600 font-bold uppercase">
-                                    <span>${item.metadata.category}</span>
-                                    <span>${item.metadata.word_count} words</span>
-                                </div>
+                // Set Main Content
+                document.getElementById('textContent').textContent = data.result;
+
+                // Detailed Cards
+                const grid = document.getElementById('detailsGrid');
+                grid.innerHTML = data.results_detail.map((item, idx) => `
+                    <div class="result-card glass rounded-2xl p-5 border-white/5" style="animation-delay: ${idx * 100}ms">
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="text-[10px] text-slate-500 font-mono tracking-tighter">${item.id}</span>
+                            <span class="text-[10px] font-bold text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded">${(item.similarity * 100).toFixed(1)}% Match</span>
+                        </div>
+                        <p class="text-slate-400 text-sm leading-relaxed mb-4 line-clamp-4">
+                            ${item.text.replace(/</g, '&lt;').replace(/>/g, '&gt;')}
+                        </p>
+                        <div class="flex items-center gap-4 pt-4 border-t border-white/5">
+                            <div class="flex items-center gap-1.5 text-[10px] text-slate-500 font-bold uppercase">
+                                <i data-lucide="tag" class="w-3 h-3"></i>
+                                ${item.metadata.category}
                             </div>
-                        `).join('')}
+                            <div class="flex items-center gap-1.5 text-[10px] text-slate-500 font-bold uppercase">
+                                <i data-lucide="file-text" class="w-3 h-3"></i>
+                                ${item.metadata.word_count} words
+                            </div>
+                        </div>
                     </div>
-                `;
-                
-                document.getElementById('textContent').innerHTML = formattedHtml;
-                container.classList.remove('hidden');
+                `).join('');
+
+                lucide.createIcons();
+                window.scrollTo({ top: 400, behavior: 'smooth' });
                 
             } catch (err) {
-                alert('Error: ' + err.message);
+                console.error(err);
             } finally {
                 btn.innerHTML = 'Search';
                 btn.disabled = false;
@@ -182,33 +358,51 @@
                 const res = await fetch('/cache/stats');
                 const data = await res.json();
                 
-                const html = `
-                    <div class="flex justify-between border-b border-slate-700 pb-2">
-                        <span>Hits</span><span class="text-emerald-400 font-bold">${data.hits}</span>
-                    </div>
-                    <div class="flex justify-between border-b border-slate-700 pb-2">
-                        <span>Misses</span><span class="text-blue-400 font-bold">${data.misses}</span>
-                    </div>
-                    <div class="flex justify-between border-b border-slate-700 pb-2">
-                        <span>Hit Rate</span><span class="text-white font-bold">${(data.hit_rate * 100).toFixed(1)}%</span>
-                    </div>
-                    <div class="flex justify-between border-b border-slate-700 pb-2">
-                        <span>Cache Size</span><span class="text-white font-bold">${data.size}</span>
-                    </div>
-                    <div class="pt-2">
-                        <span class="text-slate-500 text-xs uppercase font-bold">Per Cluster Hits</span>
-                        <div class="mt-2 grid grid-cols-2 gap-2">
-                            ${Object.entries(data.per_cluster_hits).map(([k,v]) => 
-                                `<div class="bg-slate-800 p-2 rounded text-center">C${k}: <span class="text-white">${v}</span></div>`
-                            ).join('') || '<div class="col-span-2 text-slate-600 italic">No hits recorded</div>'}
+                const statsHtml = `
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="p-4 bg-slate-900/50 rounded-2xl border border-white/5">
+                            <span class="text-xs text-slate-500 uppercase font-bold">Total Hits</span>
+                            <div class="text-3xl font-bold text-emerald-400 mt-1">${data.hit_count}</div>
                         </div>
+                        <div class="p-4 bg-slate-900/50 rounded-2xl border border-white/5">
+                            <span class="text-xs text-slate-500 uppercase font-bold">Total Misses</span>
+                            <div class="text-3xl font-bold text-blue-400 mt-1">${data.miss_count}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="p-4 bg-slate-900/50 rounded-2xl border border-white/5">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs text-slate-500 uppercase font-bold">Cache Efficiency</span>
+                            <span class="text-sm font-bold text-white">${(data.hit_rate * 100).toFixed(1)}%</span>
+                        </div>
+                        <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
+                            <div class="h-full bg-gradient-to-r from-blue-500 to-emerald-500" style="width: ${data.hit_rate * 100}%"></div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <span class="text-[10px] text-slate-500 uppercase font-bold tracking-widest pl-1">Hit Distribution by Cluster</span>
+                        <div class="grid grid-cols-2 gap-2">
+                            ${Object.entries(data.per_cluster_hits).map(([k,v]) => `
+                                <div class="flex items-center justify-between p-3 bg-white/5 rounded-xl text-xs">
+                                    <span class="text-slate-400 font-medium">Cluster ${k}</span>
+                                    <span class="text-white font-bold">${v}</span>
+                                </div>
+                            `).join('') || '<div class="col-span-2 text-center py-4 text-slate-600 text-xs italic">No cache activity yet</div>'}
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center justify-between pt-4 border-t border-white/5 text-[10px] text-slate-500 uppercase font-bold">
+                        <span>Stored Entries: ${data.total_entries}</span>
+                        <span>Evictions: ${data.evictions}</span>
                     </div>
                 `;
                 
-                document.getElementById('statsContent').innerHTML = html;
+                document.getElementById('statsContent').innerHTML = statsHtml;
                 document.getElementById('statsModal').classList.remove('hidden');
+                lucide.createIcons();
             } catch (e) {
-                alert('Failed to load stats');
+                console.error(e);
             }
         }
 
@@ -217,14 +411,12 @@
         }
 
         async function clearCache() {
-            if(!confirm('Are you sure you want to flush the cache?')) return;
+            if(!confirm('This will wipe all semantic indices in the cache. Continue?')) return;
             try {
-                const res = await fetch('/cache', {method: 'DELETE'});
-                const data = await res.json();
-                alert(data.message);
-                document.getElementById('resultsContainer').classList.add('hidden');
+                await fetch('/cache', {method: 'DELETE'});
+                location.reload();
             } catch (e) {
-                alert('Failed to clear cache');
+                console.error(e);
             }
         }
     </script>
