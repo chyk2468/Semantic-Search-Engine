@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  semantic-search:
+    build: .
+    ports:
+      - "8000:8000"
+    # Persist the vector store so that index updates are not lost when the container is recreated.
+    volumes:
+      - chroma_data:/app/chroma_store
+    environment:
+      # Tunable similarity threshold for the semantic cache
+      - SIMILARITY_THRESHOLD=0.85
+    # Automatically restart the service unless it's explicitly stopped.
+    restart: unless-stopped
+
+volumes:
+  # Named volume for ChromaDB persistence
+  chroma_data:

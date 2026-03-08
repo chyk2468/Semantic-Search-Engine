@@ -1,0 +1,23 @@
+# Environments
+venv/
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Project Data (Large Files)
+*.npy
+*.pkl
+chroma_store/
+dataset/
+
+# Visualizations
+*.png
+
+# Boundary cases
+boundary_cases.txt
+
+# OS
+.DS_Store
+Thumbs.db
