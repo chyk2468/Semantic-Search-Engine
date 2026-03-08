@@ -4,13 +4,26 @@
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  --color: rgba(255, 255, 255, 0.87);
+  --bg-color: #242424;
+  --button-bg: #1a1a1a;
+  --link-hover: #535bf2;
+
+  color: var(--color);
+  background-color: var(--bg-color);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+[data-theme='light'] {
+  color-scheme: light;
+  --color: #213547;
+  --bg-color: #ffffff;
+  --button-bg: #f9f9f9;
+  --link-hover: #747bff;
 }
 
 a {
@@ -19,7 +32,7 @@ a {
   text-decoration: inherit;
 }
 a:hover {
-  color: #535bf2;
+  color: var(--link-hover);
 }
 
 body {
@@ -42,7 +55,8 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: var(--button-bg);
+  color: var(--color);
   cursor: pointer;
   transition: border-color 0.25s;
 }
@@ -55,14 +69,11 @@ button:focus-visible {
 }
 
 @media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
+  :root:not([data-theme='dark']) {
+    color-scheme: light;
+    --color: #213547;
+    --bg-color: #ffffff;
+    --button-bg: #f9f9f9;
+    --link-hover: #747bff;
   }
 }
