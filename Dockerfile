@@ -20,6 +20,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY backend/ ./backend/
 COPY data/ ./data/
 COPY static/ ./static/
+COPY scripts/ ./scripts/
+
+# Merge the database chunks before running the application
+RUN python scripts/merge_db.py
 
 # Expose the FastAPI default port
 EXPOSE 8000

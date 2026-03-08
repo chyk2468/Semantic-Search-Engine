@@ -8,5 +8,4 @@ __pycache__/
 setup.bat
 run.bat
 process_data.bat
-scripts/
 frontend/
