@@ -10,23 +10,24 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy only the requirements first to leverage Docker layer caching.
-# This ensures that we don't re-download all packages unless requirements.txt changes.
 COPY requirements.txt .
 
 # Install dependencies using the CPU-only version of torch to save space
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the core application files and pre-computed assets from Phase 1 & 2
-# We do NOT copy the raw dataset or processing scripts to keep the production image lean.
+# Copy the core application files and pre-computed assets
+# We copy everything needed for a clean production startup.
 COPY app.py .
 COPY semantic_cache.py .
 COPY embeddings.npy .
 COPY cleaned_docs.pkl .
 COPY cluster_results.pkl .
 COPY chroma_store/ ./chroma_store/
+COPY static/ ./static/
 
 # Expose the FastAPI default port
 EXPOSE 8000
 
 # Run the FastAPI service using uvicorn
+# Using 0.0.0.0 is critical for Docker networking.
 CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]

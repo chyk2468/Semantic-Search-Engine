@@ -6,6 +6,7 @@ services:
     ports:
       - "8000:8000"
     # Persist the vector store so that index updates are not lost when the container is recreated.
+    # Note: If running on Windows, using a named volume is recommended for best performance.
     volumes:
       - chroma_data:/app/chroma_store
     environment:
