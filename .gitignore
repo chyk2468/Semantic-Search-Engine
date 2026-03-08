@@ -10,7 +10,6 @@ __pycache__/
 data/*.npy
 data/*.pkl
 data/chroma_store/
-data/dataset/
 
 # Visualizations
 data/*.png

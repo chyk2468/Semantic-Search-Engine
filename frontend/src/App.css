@@ -21,6 +21,7 @@ header {
 .theme-switch-wrapper {
   display: flex;
   align-items: center;
+  flex-shrink: 0;
 }
 
 .theme-switch {
@@ -35,7 +36,7 @@ header {
 }
 
 .slider {
-  background-color: #333;
+  background-color: #555;
   bottom: 0;
   cursor: pointer;
   left: 0;
@@ -43,26 +44,27 @@ header {
   right: 0;
   top: 0;
   transition: .4s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  border: 2px solid #777;
 }
 
 .slider:before {
   background-color: #fff;
-  bottom: 4px;
+  bottom: 2px;
   content: "";
   height: 26px;
-  left: 4px;
+  left: 3px;
   position: absolute;
   transition: .4s;
   width: 26px;
   z-index: 2;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 
 input:checked + .slider {
   background-color: #646cff;
+  border-color: #535bf2;
 }
+
 
 input:checked + .slider:before {
   transform: translateX(26px);
@@ -78,14 +80,34 @@ input:checked + .slider:before {
 
 .slider .icon {
   position: absolute;
-  font-size: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
   z-index: 1;
   transition: .4s;
+  pointer-events: none;
+}
+
+/* Position moon on the left when in dark mode (knob will be there? No, knob is on the left when unchecked) */
+/* Wait, if knob is at left: 4px, it covers 4px to 30px.
+   If moon is at right: 8px, it's at 60 - 8 - 16 = 36px. Not covered!
+   If sun is at left: 8px, it's at 8px. Not covered when knob is on the right!
+*/
+
+.slider .icon {
+  right: 8px;
+}
+
+input:checked + .slider .icon {
+  left: 8px;
+  right: auto;
 }
 
 [data-theme='light'] .slider {
-  background-color: #ccc;
+  background-color: #e0e0e0;
+  border-color: #ccc;
 }
+
 
 .search-form {
   display: flex;
