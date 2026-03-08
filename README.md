@@ -83,35 +83,35 @@ Follow these steps to understand the application workflow:
 
 ### 1. Initial Setup and Data Processing
 Before running the application, the dataset must be embedded and stored in ChromaDB.
-![Data Processing](Screenshot%202026-03-08%20172702.png)
+![Data Processing](screenshots/Screenshot%202026-03-08%20172702.png)
 *   **Step:** Run `.\process_data.bat` to trigger the embedding and clustering pipeline.
 
 ### 2. Launching the Application
 The backend and frontend can be started together or separately.
-![Starting the Server](Screenshot%202026-03-08%20173840.png)
+![Starting the Server](screenshots/Screenshot%202026-03-08%20173840.png)
 *   **Step:** Use `.\run.bat` or `docker-compose up` to launch the FastAPI backend and React frontend.
 
 ### 3. Search Interface Overview
 The main interface allows for natural language queries.
-![UI Overview](Screenshot%202026-03-08%20173924.png)
+![UI Overview](screenshots/Screenshot%202026-03-08%20173924.png)
 *   **Step:** Open `http://localhost:5173` to access the Semantic Search Engine UI.
 
 ### 4. Performing a Semantic Search
 Enter a query to find relevant documents based on meaning rather than just keywords.
-![Search Query](Screenshot%202026-03-08%20173953.png)
+![Search Query](screenshots/Screenshot%202026-03-08%20173953.png)
 *   **Step:** Type a natural language query (e.g., "space exploration" or "computer hardware") into the search bar.
 
 ### 5. Reviewing Search Results
 The results show similarity scores, categories, and dominant clusters.
-![Search Results](Screenshot%202026-03-08%20174000.png)
+![Search Results](screenshots/Screenshot%202026-03-08%20174000.png)
 *   **Step:** Observe how the engine returns the most relevant documents with match percentages.
 
 ### 6. Semantic Caching in Action
 Subsequent similar queries are served from the semantic cache for faster response times.
-![Cache Hit](Screenshot%202026-03-08%20174025.png)
+![Cache Hit](screenshots/Screenshot%202026-03-08%20174025.png)
 *   **Step:** Notice the "Cache Hit" badge and reduced response time when searching for similar topics.
 
 ### 7. Cluster Distribution
 The engine analyzes which topic cluster the query belongs to.
-![Cluster Analysis](Screenshot%202026-03-08%20174104.png)
+![Cluster Analysis](screenshots/Screenshot%202026-03-08%20174104.png)
 *   **Step:** View the "Dominant Cluster" (e.g., Science & Medicine) assigned to your query.
