@@ -83,11 +83,15 @@ Performs a semantic search with detailed performance metrics.
 
 ## 📁 Project Structure
 
-*   `app.py`: FastAPI service with singleton state management.
-*   `semantic_cache.py`: Core logic for the cluster-partitioned semantic cache.
-*   `phase1_embed.py`: Data ingestion, cleaning, and embedding generation.
-*   `phase2_cluster.py`: Dimensionality reduction (UMAP) and Fuzzy C-Means clustering.
-*   `static/index.html`: Modern Tailwind CSS frontend.
+*   `backend/`:
+    *   `app.py`: FastAPI service with singleton state management.
+    *   `semantic_cache.py`: Core logic for the cluster-partitioned semantic cache.
+*   `scripts/`:
+    *   `phase1_embed.py`: Data ingestion, cleaning, and embedding generation.
+    *   `phase2_cluster.py`: Dimensionality reduction (UMAP) and Fuzzy C-Means clustering.
+*   `data/`: Persistent storage for embeddings, clusters, and the raw dataset.
+*   `static/`: Pre-built frontend assets.
+*   `frontend/`: Source code for the React/TypeScript frontend.
 *   `*.bat`: Windows-optimized automation scripts.
 
 ---

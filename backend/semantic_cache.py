@@ -7,11 +7,17 @@ Requirements:
 - time
 """
 
+import os
 import numpy as np
 import pickle
 import time
+from pathlib import Path
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional
+
+# --- Path Configuration ---
+BASE_DIR = Path(__file__).resolve().parent.parent
+DATA_DIR = BASE_DIR / "data"
 
 @dataclass
 class CacheEntry:
@@ -74,9 +80,12 @@ class SemanticCache:
         """
         if SemanticCache._centroids is None:
             try:
-                with open('cluster_results.pkl', 'rb') as f:
+                cluster_results_path = DATA_DIR / 'cluster_results.pkl'
+                embeddings_path = DATA_DIR / 'embeddings.npy'
+                
+                with open(cluster_results_path, 'rb') as f:
                     res = pickle.load(f)
-                embeddings = np.load('embeddings.npy')
+                embeddings = np.load(embeddings_path)
                 
                 chosen_k = res['chosen_k']
                 dominant_clusters = res['dominant_clusters']
@@ -93,7 +102,7 @@ class SemanticCache:
                 SemanticCache._cluster_results = res
                 print(f"SemanticCache: Loaded {chosen_k} cluster centroids.")
             except FileNotFoundError:
-                print("Warning: cluster_results.pkl or embeddings.npy not found.")
+                print(f"Warning: {cluster_results_path} or {embeddings_path} not found.")
 
     def _cosine_similarity(self, a: np.ndarray, b: np.ndarray) -> float:
         dot_product = np.dot(a, b)
@@ -219,7 +228,7 @@ if __name__ == "__main__":
             cluster2 = cache.get_dominant_cluster(emb2)
             
             # Store first query
-            cache.store(queries_1[i], emb1, cluster1, f"Result for {queries_1[i]}")
+            cache.store(queries_1[i], emb1, cluster1, [{"text": f"Result for {queries_1[i]}"}], [0.0]*5)
             
             # Lookup with second query
             res = cache.lookup(emb2, cluster2)

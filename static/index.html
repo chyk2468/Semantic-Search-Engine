@@ -3,267 +3,263 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Semantic Search Engine | Trademarkia</title>
+    <title>Semantic Search | Intelligent Retrieval</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         :root {
-            --primary: #3b82f6;
-            --primary-glow: rgba(59, 130, 246, 0.5);
-            --bg-dark: #020617;
-            --surface-dark: #0f172a;
-            --border-dark: #1e293b;
+            --claude-bg: #F9F9F8;
+            --claude-surface: #FFFFFF;
+            --claude-border: #E5E5E0;
+            --claude-text: #1D1D1B;
+            --claude-muted: #6B6B66;
+            --claude-accent: #D97757; /* A soft clay/orange accent like Claude */
+            --claude-accent-soft: #F5EFEB;
         }
 
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: var(--bg-dark);
-            color: #f8fafc;
-            overflow-x: hidden;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--claude-bg);
+            color: var(--claude-text);
+            line-height: 1.6;
         }
 
-        .glass {
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        .serif {
+            font-family: 'Lora', serif;
+        }
+
+        .claude-shadow {
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.1);
         }
 
         .search-container {
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.2s ease;
+            border: 1px solid var(--claude-border);
         }
 
         .search-container:focus-within {
-            transform: translateY(-2px);
-            box-shadow: 0 0 20px var(--primary-glow);
-            border-color: var(--primary);
+            border-color: #AFABA3;
+            box-shadow: 0 0 0 4px rgba(0,0,0,0.03);
         }
 
         .result-card {
-            transition: all 0.3s ease;
-            animation: slideUp 0.5s ease-out forwards;
-            opacity: 0;
+            border-bottom: 1px solid var(--claude-border);
         }
 
-        .result-card:hover {
-            border-color: rgba(59, 130, 246, 0.3);
-            background: rgba(30, 41, 59, 0.4);
-            transform: scale(1.01);
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .loader {
-            width: 20px;
-            height: 20px;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            border-bottom-color: white;
-            border-radius: 50%;
-            display: inline-block;
-            animation: rotation 1s linear infinite;
-        }
-
-        @keyframes rotation {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .gradient-text {
-            background: linear-gradient(135deg, #60a5fa 0%, #34d399 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: var(--bg-dark);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--border-dark);
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #334155;
+        .sidebar {
+            border-right: 1px solid var(--claude-border);
+            background: #F0F0EE;
         }
 
         .badge-hit {
-            background: rgba(16, 185, 129, 0.1);
-            color: #10b981;
-            border: 1px solid rgba(16, 185, 129, 0.2);
+            background: #E8F5E9;
+            color: #2E7D32;
         }
 
         .badge-miss {
-            background: rgba(59, 130, 246, 0.1);
-            color: #3b82f6;
-            border: 1px solid rgba(59, 130, 246, 0.2);
+            background: #E3F2FD;
+            color: #1565C0;
+        }
+
+        /* Loading Animation */
+        .dot-pulse {
+            position: relative;
+            left: -9999px;
+            width: 6px;
+            height: 6px;
+            border-radius: 5px;
+            background-color: var(--claude-muted);
+            color: var(--claude-muted);
+            box-shadow: 9999px 0 0 0 var(--claude-muted);
+            animation: dot-pulse 1.5s infinite linear;
+        }
+
+        @keyframes dot-pulse {
+            0% { box-shadow: 9999px 0 0 -5px var(--claude-muted); }
+            30% { box-shadow: 9999px 0 0 2px var(--claude-muted); }
+            60%, 100% { box-shadow: 9999px 0 0 -5px var(--claude-muted); }
+        }
+
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .scroll-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scroll-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
     </style>
 </head>
-<body class="min-h-screen pb-20">
-    <!-- Navbar -->
-    <nav class="sticky top-0 z-40 w-full border-b border-white/5 bg-slate-950/50 backdrop-blur-md">
-        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-            <div class="flex items-center gap-2">
-                <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                    <i data-lucide="search" class="w-5 h-5 text-white"></i>
+<body class="flex h-screen overflow-hidden">
+
+    <!-- Sidebar (Claude-style sidebar) -->
+    <aside class="sidebar w-64 flex-shrink-0 flex flex-col hidden md:flex">
+        <div class="p-6 border-b border-black/5">
+            <div class="flex items-center gap-2 font-semibold text-lg tracking-tight">
+                <div class="w-6 h-6 bg-[#D97757] rounded flex items-center justify-center">
+                    <i data-lucide="brain-circuit" class="w-4 h-4 text-white"></i>
                 </div>
-                <span class="text-xl font-bold tracking-tight">Semantic<span class="text-blue-500">Search</span></span>
+                <span>Semantic Lab</span>
             </div>
-            <div class="flex items-center gap-3">
-                <button onclick="fetchStats()" class="p-2 hover:bg-white/5 rounded-lg transition-colors group relative" title="Cache Statistics">
-                    <i data-lucide="bar-chart-3" class="w-5 h-5 text-slate-400 group-hover:text-white"></i>
-                </button>
-                <button onclick="clearCache()" class="p-2 hover:bg-red-500/10 rounded-lg transition-colors group" title="Clear Cache">
-                    <i data-lucide="trash-2" class="w-5 h-5 text-slate-400 group-hover:text-red-400"></i>
+        </div>
+        
+        <div class="flex-1 overflow-y-auto p-4 space-y-8 mt-4">
+            <div>
+                <h3 class="text-[10px] uppercase font-bold text-claude-muted tracking-widest mb-4 px-2">Cache Health</h3>
+                <div id="sidebarStats" class="space-y-4">
+                    <div class="px-2 py-1 italic text-sm text-claude-muted">Loading metrics...</div>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="text-[10px] uppercase font-bold text-claude-muted tracking-widest mb-4 px-2">System Controls</h3>
+                <button onclick="clearCache()" class="w-full text-left px-3 py-2 rounded-lg text-sm text-red-600 hover:bg-red-50 transition-colors flex items-center gap-2">
+                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    Flush Cache
                 </button>
             </div>
         </div>
-    </nav>
 
-    <!-- Hero Section -->
-    <div class="max-w-4xl mx-auto pt-20 px-4">
-        <div class="text-center mb-12">
-            <h1 class="text-5xl font-extrabold mb-4 tracking-tight">
-                Discover Intelligence with <span class="gradient-text">Semantic Search</span>
-            </h1>
-            <p class="text-slate-400 text-lg">
-                High-performance vector retrieval with sub-millisecond semantic caching.
-            </p>
+        <div class="p-6 border-t border-black/5 text-[10px] text-claude-muted font-medium">
+            TRADEMARKIA ASSIGNMENT V1.0
         </div>
+    </aside>
 
-        <!-- Search Box -->
-        <div class="relative max-w-2xl mx-auto mb-16">
-            <form onsubmit="handleSearch(event)" class="group">
-                <div class="search-container flex items-center bg-slate-900/50 border border-slate-700/50 rounded-2xl p-2 focus-within:bg-slate-900">
-                    <div class="pl-4 pr-2">
-                        <i data-lucide="search" class="w-6 h-6 text-slate-500"></i>
-                    </div>
-                    <input type="text" id="searchInput" 
-                        placeholder="What are you looking for today?" 
-                        class="w-full bg-transparent border-none py-3 text-lg focus:ring-0 placeholder-slate-500 text-slate-200"
-                        required minlength="3">
-                    <button type="submit" id="searchBtn" 
-                        class="bg-blue-600 hover:bg-blue-500 text-white px-8 py-3 rounded-xl font-semibold transition-all shadow-lg shadow-blue-900/20 active:scale-95 flex items-center gap-2">
-                        <span>Search</span>
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col relative bg-white">
+        <!-- Top Bar -->
+        <header class="h-14 border-b border-claude-border flex items-center justify-between px-6 bg-white/80 backdrop-blur-sm z-10">
+            <div class="flex items-center gap-4">
+                <span class="text-sm font-medium text-claude-muted">New Search</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <div id="statusIndicator" class="flex items-center gap-2 text-[11px] font-semibold text-claude-muted">
+                    <div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
+                    SYSTEM READY
+                </div>
+            </div>
+        </header>
+
+        <!-- Messages Area -->
+        <div id="messageDisplay" class="flex-1 overflow-y-auto scroll-hide">
+            <div id="initialView" class="max-w-2xl mx-auto pt-32 px-6 text-center">
+                <h1 class="serif text-4xl font-medium mb-4 text-[#3D3D3D]">How can I help you explore the data?</h1>
+                <p class="text-claude-muted text-lg max-w-md mx-auto">
+                    Search through the 20 Newsgroups dataset with semantic precision and real-time caching.
+                </p>
+                <div class="mt-12 grid grid-cols-1 sm:grid-cols-2 gap-3 text-left max-w-lg mx-auto">
+                    <button onclick="useExample('Tell me about space exploration and NASA')" class="p-4 border border-claude-border rounded-xl hover:bg-claude-bg transition-all text-sm group">
+                        <span class="block font-semibold mb-1 group-hover:text-claude-accent transition-colors">Space & NASA</span>
+                        <span class="text-claude-muted">Explore scientific discussions about space.</span>
                     </button>
+                    <button onclick="useExample('Windows vs Macintosh hardware differences')" class="p-4 border border-claude-border rounded-xl hover:bg-claude-bg transition-all text-sm group">
+                        <span class="block font-semibold mb-1 group-hover:text-claude-accent transition-colors">OS Debates</span>
+                        <span class="text-claude-muted">Technical comparisons of computing platforms.</span>
+                    </button>
+                </div>
+            </div>
+
+            <div id="resultsContent" class="hidden max-w-3xl mx-auto py-12 px-6 space-y-12">
+                <!-- User Query -->
+                <div class="flex gap-4">
+                    <div class="w-8 h-8 rounded bg-slate-200 flex-shrink-0 flex items-center justify-center text-xs font-bold text-slate-500">U</div>
+                    <div class="flex-1 pt-0.5">
+                        <p id="displayQuery" class="text-xl font-medium text-[#1D1D1B]"></p>
+                    </div>
+                </div>
+
+                <!-- Assistant Response (Claude-like) -->
+                <div class="flex gap-4">
+                    <div class="w-8 h-8 rounded bg-[#D97757] flex-shrink-0 flex items-center justify-center">
+                        <i data-lucide="sparkles" class="w-4 h-4 text-white"></i>
+                    </div>
+                    <div class="flex-1 pt-0.5 space-y-6">
+                        <!-- Cache Info Badge -->
+                        <div id="cacheStatus" class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-bold tracking-wide uppercase">
+                            <!-- Injected -->
+                        </div>
+
+                        <!-- Main Result -->
+                        <div id="mainResponse" class="serif text-[1.15rem] leading-[1.8] text-[#3D3D3D] border-l-2 border-claude-accent-soft pl-6 py-2">
+                            <!-- Injected -->
+                        </div>
+
+                        <!-- Details Section -->
+                        <div class="pt-8 space-y-4">
+                            <h4 class="text-[10px] uppercase font-bold text-claude-muted tracking-widest flex items-center gap-2">
+                                <i data-lucide="layers" class="w-3 h-3"></i>
+                                Semantic Source Matches
+                            </h4>
+                            <div id="sourceMatches" class="grid grid-cols-1 gap-4">
+                                <!-- Injected -->
+                            </div>
+                        </div>
+
+                        <!-- Metrics Footer -->
+                        <div class="pt-6 border-t border-claude-border flex flex-wrap gap-6 text-[11px] font-semibold text-claude-muted uppercase tracking-wider">
+                            <div class="flex items-center gap-1.5">
+                                <i data-lucide="clock" class="w-3.5 h-3.5"></i>
+                                <span id="metricTime">--</span>ms
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <i data-lucide="folder-search" class="w-3.5 h-3.5"></i>
+                                Cluster: <span id="metricCluster" class="text-claude-text">--</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Floating Input Area (Claude-style) -->
+        <div class="max-w-3xl w-full mx-auto p-6 bg-gradient-to-t from-white via-white to-transparent">
+            <form onsubmit="handleSearch(event)" class="relative">
+                <div class="search-container rounded-2xl bg-white claude-shadow p-2 flex items-end gap-2">
+                    <textarea id="searchInput" rows="1" 
+                        placeholder="Type your search query..." 
+                        class="w-full border-none focus:ring-0 text-lg py-3 px-4 resize-none bg-transparent scroll-hide"
+                        style="max-height: 200px"
+                        required minlength="3"></textarea>
+                    <button type="submit" id="searchBtn" 
+                        class="p-3 bg-[#1D1D1B] text-white rounded-xl hover:bg-black transition-all active:scale-95 disabled:bg-slate-300">
+                        <i data-lucide="arrow-up" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                <div class="mt-3 text-center">
+                    <p class="text-[11px] text-claude-muted font-medium">Semantic Cache Threshold: 0.85 • 20 Newsgroups Corpus</p>
                 </div>
             </form>
         </div>
-
-        <!-- Results Area -->
-        <div id="resultsContainer" class="hidden space-y-8 animate-in fade-in duration-500">
-            <!-- Summary Header -->
-            <div class="glass rounded-2xl p-6 flex flex-wrap items-center justify-between gap-6 border-blue-500/10">
-                <div class="flex items-center gap-4">
-                    <div id="badgeCache" class="px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider"></div>
-                    <div class="h-8 w-px bg-slate-800"></div>
-                    <div class="flex items-center gap-3 text-sm">
-                        <div class="flex items-center gap-2 text-slate-400">
-                            <i data-lucide="folder" class="w-4 h-4"></i>
-                            <span>Topic: <span id="clusterName" class="text-white font-semibold"></span></span>
-                        </div>
-                        <div class="flex items-center gap-2 text-slate-400">
-                            <i data-lucide="clock" class="w-4 h-4"></i>
-                            <span><span id="responseTime" class="text-white font-semibold"></span>ms</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="flex-1 min-w-[200px]">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="text-[10px] text-slate-500 uppercase font-bold">Semantic Distribution</span>
-                    </div>
-                    <div id="distributionBar" class="flex h-1.5 w-full rounded-full overflow-hidden bg-slate-800/50">
-                        <!-- Segments injected here -->
-                    </div>
-                </div>
-            </div>
-
-            <!-- Matched Cache Info -->
-            <div id="matchedQueryContainer" class="hidden bg-blue-500/5 border border-blue-500/20 rounded-2xl p-6">
-                <div class="flex items-start gap-4">
-                    <div class="p-2 bg-blue-500/10 rounded-lg">
-                        <i data-lucide="zap" class="w-5 h-5 text-blue-400"></i>
-                    </div>
-                    <div>
-                        <span class="text-[10px] text-blue-400 uppercase font-bold tracking-widest">Matched Cache Query</span>
-                        <p id="matchedQueryText" class="text-lg text-slate-200 mt-1 font-medium italic"></p>
-                        <div class="mt-2 flex items-center gap-2">
-                            <div class="w-32 h-1 bg-slate-800 rounded-full overflow-hidden">
-                                <div id="simScoreBar" class="h-full bg-blue-500"></div>
-                            </div>
-                            <span class="text-xs text-slate-500"><span id="simScore" class="text-blue-400 font-bold"></span> similarity</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Main Result -->
-            <div id="mainResult" class="glass rounded-2xl p-8 border-l-4 border-l-blue-500">
-                <div class="flex items-center gap-2 mb-4">
-                    <span class="text-[10px] bg-blue-500/10 text-blue-400 px-2 py-0.5 rounded uppercase font-bold">Top Response</span>
-                </div>
-                <div id="textContent" class="text-slate-200 text-lg leading-relaxed whitespace-pre-wrap"></div>
-            </div>
-
-            <!-- Detailed Matches -->
-            <div class="space-y-4">
-                <h3 class="text-sm font-bold text-slate-500 uppercase tracking-widest pl-2">Supporting Sources</h3>
-                <div id="detailsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- Cards injected here -->
-                </div>
-            </div>
-        </div>
-
-        <!-- Initial State -->
-        <div id="initialState" class="py-20 text-center">
-            <div class="w-20 h-20 bg-slate-900 rounded-3xl flex items-center justify-center mx-auto mb-6 border border-slate-800">
-                <i data-lucide="sparkles" class="w-10 h-10 text-blue-500"></i>
-            </div>
-            <p class="text-slate-500 max-w-xs mx-auto">
-                Enter a query to explore the semantic dataset and see the cache in action.
-            </p>
-        </div>
-    </div>
-
-    <!-- Stats Modal -->
-    <div id="statsModal" class="fixed inset-0 bg-black/80 flex items-center justify-center hidden z-50 backdrop-blur-xl">
-        <div class="glass p-8 rounded-3xl w-full max-w-md relative border-white/10">
-            <button onclick="closeStats()" class="absolute top-6 right-6 text-slate-500 hover:text-white transition-colors">
-                <i data-lucide="x" class="w-6 h-6"></i>
-            </button>
-            <h2 class="text-2xl font-bold mb-8 flex items-center gap-3">
-                <i data-lucide="database" class="w-6 h-6 text-blue-500"></i>
-                Cache System Health
-            </h2>
-            <div id="statsContent" class="space-y-6">
-                <!-- Stats injected here -->
-            </div>
-        </div>
-    </div>
+    </main>
 
     <script>
         // Initialize Lucide Icons
         lucide.createIcons();
 
+        // Auto-resize textarea
+        const textarea = document.getElementById('searchInput');
+        textarea.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+
         async function handleSearch(e) {
-            e.preventDefault();
-            const input = document.getElementById('searchInput').value;
+            if (e) e.preventDefault();
+            const input = textarea.value.trim();
+            if (!input) return;
+
             const btn = document.getElementById('searchBtn');
-            const container = document.getElementById('resultsContainer');
-            const initial = document.getElementById('initialState');
+            const initial = document.getElementById('initialView');
+            const content = document.getElementById('resultsContent');
+            const displayQuery = document.getElementById('displayQuery');
             
-            btn.innerHTML = '<span class="loader"></span>';
             btn.disabled = true;
+            btn.innerHTML = '<div class="w-5 h-5 flex items-center justify-center"><div class="dot-pulse"></div></div>';
             
             try {
                 const res = await fetch('/query', {
@@ -276,80 +272,52 @@
                 const data = await res.json();
                 
                 initial.classList.add('hidden');
-                container.classList.remove('hidden');
+                content.classList.remove('hidden');
+                displayQuery.textContent = data.query;
 
-                // Update Cache Status
-                const badge = document.getElementById('badgeCache');
-                const matchedQueryContainer = document.getElementById('matchedQueryContainer');
-                
+                // Cache Status
+                const cacheStatus = document.getElementById('cacheStatus');
                 if (data.cache_hit) {
-                    badge.textContent = 'Cache Hit';
-                    badge.className = 'px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider badge-hit flex items-center gap-2';
-                    badge.innerHTML = '<i data-lucide="zap" class="w-3 h-3"></i> Cache Hit';
-                    
-                    matchedQueryContainer.classList.remove('hidden');
-                    document.getElementById('matchedQueryText').textContent = `"${data.matched_query}"`;
-                    document.getElementById('simScore').textContent = `${(data.similarity_score * 100).toFixed(1)}%`;
-                    document.getElementById('simScoreBar').style.width = `${data.similarity_score * 100}%`;
+                    cacheStatus.className = 'inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-bold tracking-wide uppercase badge-hit';
+                    cacheStatus.innerHTML = `<i data-lucide="zap" class="w-3.5 h-3.5"></i> Semantic Cache Hit (${(data.similarity_score * 100).toFixed(1)}%)`;
                 } else {
-                    badge.textContent = 'Vector Search';
-                    badge.className = 'px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider badge-miss flex items-center gap-2';
-                    badge.innerHTML = '<i data-lucide="search" class="w-3 h-3"></i> Vector Search';
-                    matchedQueryContainer.classList.add('hidden');
+                    cacheStatus.className = 'inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-bold tracking-wide uppercase badge-miss';
+                    cacheStatus.innerHTML = `<i data-lucide="database" class="w-3.5 h-3.5"></i> Fresh Vector Retrieval`;
                 }
-                
-                document.getElementById('clusterName').textContent = data.dominant_cluster_name;
-                document.getElementById('responseTime').textContent = data.response_time_ms;
 
-                // Update Distribution
-                const distBar = document.getElementById('distributionBar');
-                distBar.innerHTML = '';
-                const colors = ['bg-blue-500', 'bg-emerald-500', 'bg-purple-500', 'bg-amber-500', 'bg-rose-500', 'bg-indigo-500', 'bg-cyan-500'];
-                data.cluster_distribution.forEach((val, i) => {
-                    if (val > 0.02) {
-                        const segment = document.createElement('div');
-                        segment.className = `${colors[i % colors.length]} h-full transition-all duration-700 ease-out`;
-                        segment.style.width = '0%';
-                        distBar.appendChild(segment);
-                        setTimeout(() => segment.style.width = `${val * 100}%`, 50);
-                    }
-                });
-                
-                // Set Main Content
-                document.getElementById('textContent').textContent = data.result;
+                // Main Text
+                document.getElementById('mainResponse').textContent = data.result;
 
-                // Detailed Cards
-                const grid = document.getElementById('detailsGrid');
-                grid.innerHTML = data.results_detail.map((item, idx) => `
-                    <div class="result-card glass rounded-2xl p-5 border-white/5" style="animation-delay: ${idx * 100}ms">
-                        <div class="flex justify-between items-start mb-4">
-                            <span class="text-[10px] text-slate-500 font-mono tracking-tighter">${item.id}</span>
-                            <span class="text-[10px] font-bold text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded">${(item.similarity * 100).toFixed(1)}% Match</span>
+                // Metrics
+                document.getElementById('metricTime').textContent = data.response_time_ms;
+                document.getElementById('metricCluster').textContent = data.dominant_cluster_name;
+
+                // Source Matches
+                const sourceContainer = document.getElementById('sourceMatches');
+                sourceContainer.innerHTML = data.results_detail.map(item => `
+                    <div class="p-4 rounded-xl border border-claude-border hover:border-[#AFABA3] transition-colors bg-claude-bg/30">
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-[10px] font-bold text-claude-muted uppercase tracking-tighter">${item.metadata.category}</span>
+                            <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100">${(item.similarity * 100).toFixed(1)}% Match</span>
                         </div>
-                        <p class="text-slate-400 text-sm leading-relaxed mb-4 line-clamp-4">
-                            ${item.text.replace(/</g, '&lt;').replace(/>/g, '&gt;')}
-                        </p>
-                        <div class="flex items-center gap-4 pt-4 border-t border-white/5">
-                            <div class="flex items-center gap-1.5 text-[10px] text-slate-500 font-bold uppercase">
-                                <i data-lucide="tag" class="w-3 h-3"></i>
-                                ${item.metadata.category}
-                            </div>
-                            <div class="flex items-center gap-1.5 text-[10px] text-slate-500 font-bold uppercase">
-                                <i data-lucide="file-text" class="w-3 h-3"></i>
-                                ${item.metadata.word_count} words
-                            </div>
-                        </div>
+                        <p class="text-sm text-claude-text line-clamp-3 mb-0">${item.text}</p>
                     </div>
                 `).join('');
 
                 lucide.createIcons();
-                window.scrollTo({ top: 400, behavior: 'smooth' });
+                document.getElementById('messageDisplay').scrollTo({ top: 0, behavior: 'smooth' });
                 
+                // Refresh sidebar stats
+                fetchStats();
+
             } catch (err) {
                 console.error(err);
+                alert('Search failed. Please try again.');
             } finally {
-                btn.innerHTML = 'Search';
                 btn.disabled = false;
+                btn.innerHTML = '<i data-lucide="arrow-up" class="w-5 h-5"></i>';
+                textarea.value = '';
+                textarea.style.height = 'auto';
             }
         }
 
@@ -359,66 +327,63 @@
                 const data = await res.json();
                 
                 const statsHtml = `
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="p-4 bg-slate-900/50 rounded-2xl border border-white/5">
-                            <span class="text-xs text-slate-500 uppercase font-bold">Total Hits</span>
-                            <div class="text-3xl font-bold text-emerald-400 mt-1">${data.hit_count}</div>
+                    <div class="space-y-4 px-2">
+                        <div class="flex justify-between items-end">
+                            <span class="text-[11px] text-claude-muted font-semibold">Efficiency</span>
+                            <span class="text-xs font-bold">${(data.hit_rate * 100).toFixed(1)}%</span>
                         </div>
-                        <div class="p-4 bg-slate-900/50 rounded-2xl border border-white/5">
-                            <span class="text-xs text-slate-500 uppercase font-bold">Total Misses</span>
-                            <div class="text-3xl font-bold text-blue-400 mt-1">${data.miss_count}</div>
+                        <div class="w-full h-1 bg-black/5 rounded-full overflow-hidden">
+                            <div class="h-full bg-[#D97757]" style="width: ${data.hit_rate * 100}%"></div>
                         </div>
-                    </div>
-                    
-                    <div class="p-4 bg-slate-900/50 rounded-2xl border border-white/5">
-                        <div class="flex justify-between items-center mb-2">
-                            <span class="text-xs text-slate-500 uppercase font-bold">Cache Efficiency</span>
-                            <span class="text-sm font-bold text-white">${(data.hit_rate * 100).toFixed(1)}%</span>
+                        
+                        <div class="grid grid-cols-2 gap-2 pt-2">
+                            <div class="p-3 bg-white rounded-lg border border-black/5 claude-shadow">
+                                <div class="text-[10px] text-claude-muted font-bold uppercase mb-1">Hits</div>
+                                <div class="text-xl font-semibold">${data.hit_count}</div>
+                            </div>
+                            <div class="p-3 bg-white rounded-lg border border-black/5 claude-shadow">
+                                <div class="text-[10px] text-claude-muted font-bold uppercase mb-1">Misses</div>
+                                <div class="text-xl font-semibold">${data.miss_count}</div>
+                            </div>
                         </div>
-                        <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
-                            <div class="h-full bg-gradient-to-r from-blue-500 to-emerald-500" style="width: ${data.hit_rate * 100}%"></div>
-                        </div>
-                    </div>
 
-                    <div class="space-y-2">
-                        <span class="text-[10px] text-slate-500 uppercase font-bold tracking-widest pl-1">Hit Distribution by Cluster</span>
-                        <div class="grid grid-cols-2 gap-2">
-                            ${Object.entries(data.per_cluster_hits).map(([k,v]) => `
-                                <div class="flex items-center justify-between p-3 bg-white/5 rounded-xl text-xs">
-                                    <span class="text-slate-400 font-medium">Cluster ${k}</span>
-                                    <span class="text-white font-bold">${v}</span>
-                                </div>
-                            `).join('') || '<div class="col-span-2 text-center py-4 text-slate-600 text-xs italic">No cache activity yet</div>'}
+                        <div class="pt-2">
+                            <div class="text-[10px] text-claude-muted font-bold uppercase mb-2">Stored Queries</div>
+                            <div class="text-sm font-medium flex items-center gap-2">
+                                <i data-lucide="file-json" class="w-3.5 h-3.5 text-claude-muted"></i>
+                                ${data.total_entries} Entries
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div class="flex items-center justify-between pt-4 border-t border-white/5 text-[10px] text-slate-500 uppercase font-bold">
-                        <span>Stored Entries: ${data.total_entries}</span>
-                        <span>Evictions: ${data.evictions}</span>
                     </div>
                 `;
                 
-                document.getElementById('statsContent').innerHTML = statsHtml;
-                document.getElementById('statsModal').classList.remove('hidden');
+                document.getElementById('sidebarStats').innerHTML = statsHtml;
                 lucide.createIcons();
             } catch (e) {
-                console.error(e);
+                console.error('Stats failed:', e);
             }
         }
 
-        function closeStats() {
-            document.getElementById('statsModal').classList.add('hidden');
+        function useExample(text) {
+            textarea.value = text;
+            textarea.style.height = 'auto';
+            textarea.style.height = (textarea.scrollHeight) + 'px';
+            handleSearch();
         }
 
         async function clearCache() {
             if(!confirm('This will wipe all semantic indices in the cache. Continue?')) return;
             try {
                 await fetch('/cache', {method: 'DELETE'});
+                fetchStats();
                 location.reload();
             } catch (e) {
                 console.error(e);
             }
         }
+
+        // Initial Load
+        fetchStats();
     </script>
 </body>
 </html>

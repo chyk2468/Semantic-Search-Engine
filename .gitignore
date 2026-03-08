@@ -7,16 +7,16 @@ __pycache__/
 *.py[cod]
 
 # Project Data (Large Files)
-*.npy
-*.pkl
-chroma_store/
-dataset/
+data/*.npy
+data/*.pkl
+data/chroma_store/
+data/dataset/
 
 # Visualizations
-*.png
+data/*.png
 
 # Boundary cases
-boundary_cases.txt
+data/boundary_cases.txt
 
 # OS
 .DS_Store

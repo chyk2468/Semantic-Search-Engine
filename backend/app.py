@@ -15,6 +15,7 @@ import time
 import pickle
 import numpy as np
 import chromadb
+from pathlib import Path
 from fastapi import FastAPI, HTTPException, Body, Depends
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
@@ -22,7 +23,15 @@ from pydantic import BaseModel, Field
 from typing import List, Optional, Dict
 from contextlib import asynccontextmanager
 from sentence_transformers import SentenceTransformer
-from semantic_cache import SemanticCache
+try:
+    from .semantic_cache import SemanticCache
+except ImportError:
+    from semantic_cache import SemanticCache
+
+# --- Path Configuration ---
+BASE_DIR = Path(__file__).resolve().parent.parent
+DATA_DIR = BASE_DIR / "data"
+STATIC_DIR = BASE_DIR / "static"
 
 # --- Pydantic Models ---
 
@@ -91,17 +100,17 @@ async def lifespan(app: FastAPI):
     print("Initializing Semantic Search Service...")
     
     try:
-        with open('cleaned_docs.pkl', 'rb') as f:
+        with open(DATA_DIR / 'cleaned_docs.pkl', 'rb') as f:
             app_state["cleaned_docs"] = pickle.load(f)
         
-        with open('cluster_results.pkl', 'rb') as f:
+        with open(DATA_DIR / 'cluster_results.pkl', 'rb') as f:
             app_state["cluster_results"] = pickle.load(f)
             
         app_state["model"] = SentenceTransformer('all-MiniLM-L6-v2')
         
         from chromadb.config import Settings
         chroma_client = chromadb.PersistentClient(
-            path="./chroma_store",
+            path=str(DATA_DIR / "chroma_store"),
             settings=Settings(anonymized_telemetry=False)
         )
         app_state["chroma_collection"] = chroma_client.get_collection(name="newsgroups")
@@ -130,11 +139,15 @@ async def lifespan(app: FastAPI):
     print("Shutting down service...")
 
 app = FastAPI(title="Trademarkia Semantic Search", lifespan=lifespan)
-app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
 @app.get("/")
 async def serve_ui():
-    return FileResponse("static/index.html")
+    index_path = STATIC_DIR / "index.html"
+    if not index_path.exists():
+        # Fallback to backend/../static/index.html if root/static is missing
+        index_path = Path(__file__).resolve().parent.parent / "static" / "index.html"
+    return FileResponse(str(index_path))
 
 # --- Endpoints ---
 

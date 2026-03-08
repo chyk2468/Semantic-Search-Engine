@@ -15,6 +15,10 @@ from pathlib import Path
 from sentence_transformers import SentenceTransformer
 from tqdm import tqdm
 
+# --- Path Configuration ---
+BASE_DIR = Path(__file__).resolve().parent.parent
+DATA_DIR = BASE_DIR / "data"
+
 def clean_text(text: str) -> str:
     """
     Cleans the raw newsgroup text by stripping headers and metadata.
@@ -49,7 +53,7 @@ def clean_text(text: str) -> str:
     return cleaned_text
 
 def main():
-    dataset_root = Path('./dataset')
+    dataset_root = DATA_DIR / 'dataset'
     if not dataset_root.exists():
         print(f"Error: Dataset directory {dataset_root} not found.")
         return
@@ -112,7 +116,7 @@ def main():
     print("Persisting CLEAN documents to ChromaDB...")
     from chromadb.config import Settings
     chroma_client = chromadb.PersistentClient(
-        path="./chroma_store",
+        path=str(DATA_DIR / "chroma_store"),
         settings=Settings(anonymized_telemetry=False)
     )
     try:
@@ -138,8 +142,8 @@ def main():
         )
 
     print("Saving output files...")
-    np.save('embeddings.npy', embeddings)
-    with open('cleaned_docs.pkl', 'wb') as f:
+    np.save(DATA_DIR / 'embeddings.npy', embeddings)
+    with open(DATA_DIR / 'cleaned_docs.pkl', 'wb') as f:
         pickle.dump(cleaned_docs, f)
 
     print("Phase 1 complete.")

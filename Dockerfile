@@ -17,12 +17,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the core application files and pre-computed assets
 # We copy everything needed for a clean production startup.
-COPY app.py .
-COPY semantic_cache.py .
-COPY embeddings.npy .
-COPY cleaned_docs.pkl .
-COPY cluster_results.pkl .
-COPY chroma_store/ ./chroma_store/
+COPY backend/ ./backend/
+COPY data/ ./data/
 COPY static/ ./static/
 
 # Expose the FastAPI default port
@@ -30,4 +26,4 @@ EXPOSE 8000
 
 # Run the FastAPI service using uvicorn
 # Using 0.0.0.0 is critical for Docker networking.
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "backend.app:app", "--host", "0.0.0.0", "--port", "8000"]

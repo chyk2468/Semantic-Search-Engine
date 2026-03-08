@@ -9,7 +9,7 @@ echo Activating environment...
 call venv\Scripts\activate
 
 echo Running Phase 1: Embedding Generation...
-python phase1_embed.py
+python scripts/phase1_embed.py
 if %errorlevel% neq 0 (
     echo Error during Phase 1.
     pause
@@ -17,7 +17,7 @@ if %errorlevel% neq 0 (
 )
 
 echo Running Phase 2: Fuzzy Clustering...
-python phase2_cluster.py
+python scripts/phase2_cluster.py
 if %errorlevel% neq 0 (
     echo Error during Phase 2.
     pause
@@ -25,5 +25,5 @@ if %errorlevel% neq 0 (
 )
 
 echo.
-echo Data processing complete. Assets generated: embeddings.npy, cleaned_docs.pkl, cluster_results.pkl, chroma_store/
+echo Data processing complete. Assets generated in data/ directory.
 pause

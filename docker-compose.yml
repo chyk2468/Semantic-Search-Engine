@@ -6,7 +6,7 @@ services:
     # Persist the vector store so that index updates are not lost when the container is recreated.
     # Note: If running on Windows, using a named volume is recommended for best performance.
     volumes:
-      - chroma_data:/app/chroma_store
+      - chroma_data:/app/data/chroma_store
     environment:
       # Tunable similarity threshold for the semantic cache
       - SIMILARITY_THRESHOLD=0.85

@@ -8,6 +8,11 @@ if not exist venv (
 echo Activating environment...
 call venv\Scripts\activate
 
-echo Starting FastAPI Semantic Search Service...
-uvicorn app:app --host 0.0.0.0 --port 8000 --reload
-pause
+echo Starting Semantic Search Service...
+python backend/app.py
+
+if %errorlevel% neq 0 (
+    echo.
+    echo Service stopped with an error.
+    pause
+)

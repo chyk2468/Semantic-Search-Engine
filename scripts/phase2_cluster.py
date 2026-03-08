@@ -15,15 +15,23 @@ import pandas as pd
 import umap
 import skfuzzy as fuzz
 import matplotlib.pyplot as plt
+from pathlib import Path
 from sklearn.feature_extraction.text import TfidfVectorizer
 from collections import Counter
 from tqdm import tqdm
 
+# --- Path Configuration ---
+BASE_DIR = Path(__file__).resolve().parent.parent
+DATA_DIR = BASE_DIR / "data"
+
 def main():
     # 1. Load data
     print("Loading data from Phase 1...")
-    embeddings = np.load('embeddings.npy')
-    with open('cleaned_docs.pkl', 'rb') as f:
+    embeddings_path = DATA_DIR / 'embeddings.npy'
+    cleaned_docs_path = DATA_DIR / 'cleaned_docs.pkl'
+    
+    embeddings = np.load(embeddings_path)
+    with open(cleaned_docs_path, 'rb') as f:
         cleaned_docs = pickle.load(f)
     
     texts = [doc['text'] for doc in cleaned_docs]
@@ -63,14 +71,13 @@ def main():
     plt.xlabel('Number of Clusters (k)')
     plt.ylabel('FPC')
     plt.grid(True)
-    plt.savefig('cluster_selection.png')
-    print("Saved cluster_selection.png")
+    plt.savefig(DATA_DIR / 'cluster_selection.png')
+    print(f"Saved {DATA_DIR / 'cluster_selection.png'}")
 
     # Final k selection logic: 
     # High FPC means cleaner partitions. Often there's an elbow.
     # We choose the k where FPC starts to drop significantly or the best local max.
     # For newsgroups, 20 is a natural choice, but let's see what the data says.
-    # In practice, many datasets show a peak or an elbow around the true number of topics.
     best_idx = np.argmax(fpcs)
     chosen_k = ks[best_idx]
     
@@ -124,7 +131,7 @@ def main():
 
     # Boundary cases
     boundary_indices = np.argsort(uncertainty_scores)[-50:][::-1]
-    with open('boundary_cases.txt', 'w', encoding='utf-8') as f:
+    with open(DATA_DIR / 'boundary_cases.txt', 'w', encoding='utf-8') as f:
         f.write("Top 50 Most Uncertain Documents (Boundary Cases)\n")
         f.write("="*50 + "\n\n")
         for i in boundary_indices:
@@ -165,7 +172,7 @@ def main():
         'chosen_k': chosen_k,
         'reasoning': reasoning
     }
-    with open('cluster_results.pkl', 'wb') as f:
+    with open(DATA_DIR / 'cluster_results.pkl', 'wb') as f:
         pickle.dump(cluster_results, f)
 
     # Visualization
@@ -174,8 +181,8 @@ def main():
                          c=dominant_clusters, cmap='tab20', s=1, alpha=0.5)
     plt.colorbar(scatter)
     plt.title(f'UMAP 2D Projection Colored by Dominant Cluster (k={chosen_k})')
-    plt.savefig('clusters_2d.png')
-    print("Saved clusters_2d.png")
+    plt.savefig(DATA_DIR / 'clusters_2d.png')
+    print(f"Saved {DATA_DIR / 'clusters_2d.png'}")
 
     print("\nPhase 2 complete.")
     print(f"Reasoning: {reasoning}")

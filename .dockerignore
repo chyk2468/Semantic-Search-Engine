@@ -1,10 +1,12 @@
 venv/
-dataset/
+data/dataset/
+data/*.png
+data/boundary_cases.txt
 __pycache__/
-*.png
-boundary_cases.txt
 .git/
 .gitignore
 setup.bat
 run.bat
 process_data.bat
+scripts/
+frontend/
