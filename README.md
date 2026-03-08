@@ -1,131 +1,99 @@
-# Trademarkia Semantic Search System
+# 🚀 Trademarkia Semantic Search Engine
 
-A high-performance semantic search service built on the 20 Newsgroups dataset. This system utilizes deep learning embeddings, fuzzy clustering for semantic partitioning, and a custom-built semantic cache to provide fast, relevant search results across nearly 20,000 documents.
+[![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com/)
+[![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)](https://www.python.org/)
+[![ChromaDB](https://img.shields.io/badge/ChromaDB-blue?style=for-the-badge)](https://www.trychroma.com/)
+[![Windows Optimized](https://img.shields.io/badge/Windows-Optimized-0078D4?style=for-the-badge&logo=windows)](https://github.com/chyk2468/Semantic-Search-Engine)
 
-## Architecture
+A high-performance semantic search system built on the 20 Newsgroups dataset. This system utilizes deep learning embeddings, fuzzy clustering for semantic partitioning, and a custom-built semantic cache to provide fast, relevant search results across nearly 20,000 documents.
 
-```text
-Dataset (20k .txt files) → Phase 1: Embedding → ChromaDB (Vector Store) + embeddings.npy
-                                     ↓
-                          Phase 2: Fuzzy Clustering → cluster_results.pkl
-                                     ↓
-                          Phase 3: Semantic Cache (In-Memory, Cluster-Partitioned)
-                                     ↓
-                          Phase 4: FastAPI Service (app.py) ← User HTTP Requests
+---
+
+## 🏗️ System Architecture
+
+```mermaid
+graph TD
+    A[Dataset: 20k Newsgroup Posts] --> B[Phase 1: Embedding Generation]
+    B --> C[(ChromaDB Vector Store)]
+    B --> D[Phase 2: Fuzzy C-Means Clustering]
+    D --> E[Phase 3: Cluster-Partitioned Cache]
+    E --> F[Phase 4: FastAPI Service]
+    F <--> G[Modernized Tailwind UI]
 ```
 
-## Getting Started
+## ✨ Key Features
 
-### Path A: Local Development (Windows CMD)
-1.  **Initialize environment:**
-    ```cmd
-    python -m venv venv
-    venv\Scripts\activate
-    ```
-2.  **Install dependencies:**
-    ```cmd
-    pip install -r requirements.txt
-    ```
-3.  **Process data (if starting from scratch):**
-    ```cmd
-    python phase1_embed.py
-    python phase2_cluster.py
-    ```
-4.  **Run service:**
-    ```cmd
-    uvicorn app:app --host 0.0.0.0 --port 8000
-    ```
+### 🔍 AI-Powered Semantic Search
+*   **Deep Learning Embeddings:** Utilizes the `all-MiniLM-L6-v2` transformer model for high-precision semantic vectors.
+*   **Vector Database:** Powered by **ChromaDB** with metadata-based semantic filtering for rapid retrieval.
+*   **Aggressive Sanitization:** Automated pipeline to strip 15+ types of technical newsgroup headers, ensuring clean, human-readable results.
 
-### Path B: Local Development (Linux/macOS)
-1.  **Initialize environment:**
-    ```bash
-    python3 -m venv venv
-    source venv/bin/activate
-    ```
-2.  **Install dependencies:**
-    ```bash
-    pip install -r requirements.txt
-    ```
-3.  **Process data:**
-    ```bash
-    python3 phase1_embed.py
-    python3 phase2_cluster.py
-    ```
-4.  **Run service:**
-    ```bash
-    uvicorn app:app --host 0.0.0.0 --port 8000
-    ```
+### 🧠 Advanced Clustering & Caching
+*   **Fuzzy Partitioning:** Uses Fuzzy C-Means clustering to recognize documents that span multiple topics (e.g., Religion and Politics).
+*   **O(N/K) Semantic Cache:** A custom-engineered cache that lookups queries within their specific semantic cluster, providing up to **8x faster** responses for related queries.
+*   **Fuzzy Membership Visualization:** Real-time UI feedback showing the "semantic spread" of your query across different topics.
 
-### Path C: Docker (Recommended)
-Launch the entire system with a single command:
-```bash
-docker-compose up --build
-```
+### 💻 Windows & DevOps Optimized
+*   **One-Click Deployment:** Native Windows `.bat` scripts for environment setup, data processing, and server execution.
+*   **Container Ready:** Full `Dockerfile` and `docker-compose` support for seamless cross-platform deployment.
 
-## API Reference
+---
 
-### 1. POST `/query`
-Performs a semantic search.
+## 🛠️ Getting Started (Windows CMD)
 
-**Windows CMD:**
+### 1. Initialize Environment
+Run the setup script to create a virtual environment and install all dependencies:
 ```cmd
-curl -X POST "http://localhost:8000/query" -H "Content-Type: application/json" -d "{\"query\": \"How do I repair a flat tire?\"}"
+setup.bat
 ```
 
-**Linux/macOS:**
-```bash
-curl -X POST "http://localhost:8000/query" -H "Content-Type: application/json" -d '{"query": "How do I repair a flat tire?"}'
+### 2. Process Data (Optional)
+If you wish to re-process the raw dataset and re-generate the embeddings and clusters:
+```cmd
+process_data.bat
 ```
 
-**Example Response (Cache Miss):**
+### 3. Run the Service
+Launch the FastAPI server and open your browser to **[http://localhost:8000](http://localhost:8000)**:
+```cmd
+run.bat
+```
+
+---
+
+## 📊 API Reference
+
+### `POST /query`
+Performs a semantic search with detailed performance metrics.
+
+**Payload:**
 ```json
 {
-  "query": "How do I repair a flat tire?",
-  "cache_hit": false,
-  "matched_query": null,
-  "similarity_score": null,
-  "result": "Snippet 1...\n---\nSnippet 2...",
-  "dominant_cluster": 3
+  "query": "What are the latest developments in space exploration?"
 }
 ```
 
-### 2. GET `/cache/stats`
-Returns cache performance and usage statistics.
+**Response Highlights:**
+*   `cache_hit`: Boolean indicating if the result was served from the semantic cache.
+*   `dominant_cluster_name`: Human-readable topic (e.g., "Science & Medicine").
+*   `cluster_distribution`: Fuzzy membership scores across all 5 clusters.
+*   `response_time_ms`: Server-side processing time in milliseconds.
 
-```bash
-curl "http://localhost:8000/cache/stats"
-```
+---
 
-### 3. DELETE `/cache`
-Flushes all entries and resets statistics.
+## 📁 Project Structure
 
-**Windows CMD:**
-```cmd
-curl -X DELETE "http://localhost:8000/cache"
-```
+*   `app.py`: FastAPI service with singleton state management.
+*   `semantic_cache.py`: Core logic for the cluster-partitioned semantic cache.
+*   `phase1_embed.py`: Data ingestion, cleaning, and embedding generation.
+*   `phase2_cluster.py`: Dimensionality reduction (UMAP) and Fuzzy C-Means clustering.
+*   `static/index.html`: Modern Tailwind CSS frontend.
+*   `*.bat`: Windows-optimized automation scripts.
 
-**Linux/macOS:**
-```bash
-curl -X DELETE "http://localhost:8000/cache"
-```
+---
 
-## Design Decisions
+## ⚖️ Design Decisions
 
-- **Embedding Model (`all-MiniLM-L6-v2`)**: Selected for its excellent balance between inference speed and semantic quality, making it ideal for local search systems.
-- **Fuzzy Clustering (C-Means)**: Unlike hard clustering, fuzzy clustering acknowledges that newsgroup documents often span multiple topics (e.g., a post about space technology relates to both Science and Engineering).
-- **Cluster-Partitioned Cache**: By partitioning the cache into semantic clusters, lookups are restricted to relevant buckets. This reduces search complexity from $O(N)$ to approximately $O(N/K)$, ensuring the system remains fast as the cache grows.
-- **Similarity Threshold**: Controlled by `SIMILARITY_THRESHOLD` (default 0.85). Values > 0.90 are very strict; values < 0.80 may lead to false positives where unrelated queries are incorrectly matched.
-
-## File Manifest
-
-- `app.py`: FastAPI service script with singleton state management.
-- `semantic_cache.py`: Core logic for the cluster-partitioned semantic cache.
-- `phase1_embed.py`: Script to load, clean, and embed the raw dataset.
-- `phase2_cluster.py`: Script for UMAP reduction and Fuzzy C-Means clustering.
-- `requirements.txt`: Pinned project dependencies.
-- `Dockerfile`: Production-ready container configuration.
-- `docker-compose.yml`: Orchestration for persistent vector storage.
-- `embeddings.npy`: Pre-computed document vectors.
-- `cleaned_docs.pkl`: Serialized metadata for all processed documents.
-- `cluster_results.pkl`: Cluster assignments and metadata.
-- `chroma_store/`: Persistent vector database directory.
+- **Embedding Model (`all-MiniLM-L6-v2`)**: Selected for its excellent balance between inference speed and semantic quality.
+- **Fuzzy Clustering**: Acknowledges that newsgroup posts often span multiple topics, unlike hard clustering (K-Means).
+- **Partitioned Caching**: By restricting lookups to relevant semantic buckets, the system maintains $O(N/K)$ complexity as the cache grows.
