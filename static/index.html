@@ -143,25 +143,28 @@
                 });
                 
                 // Render Results
-                let formattedHtml = data.result.map((item, idx) => `
-                    <div class="mb-6 bg-slate-900/50 p-6 rounded-xl border border-slate-800 overflow-hidden result-enter" style="animation-delay: ${idx * 0.1}s">
-                        <div class="flex justify-between items-start mb-4 border-b border-slate-800 pb-3">
-                            <div>
-                                <span class="text-xs text-blue-400 font-bold uppercase tracking-widest">Match ${idx + 1}</span>
-                                <div class="text-[10px] text-slate-500 mt-1">ID: ${item.id}</div>
-                            </div>
-                            <div class="text-right">
-                                <div class="text-xs font-bold text-emerald-400">${(item.similarity * 100).toFixed(1)}% Similarity</div>
-                                <div class="text-[10px] text-slate-500 uppercase">${item.metadata.category}</div>
-                            </div>
-                        </div>
-                        <div class="text-slate-300 whitespace-pre-wrap break-all">${item.text.replace(/</g, '&lt;').replace(/>/g, '&gt;')}...</div>
-                        <div class="mt-4 flex gap-4 text-[10px] text-slate-600 font-semibold">
-                            <span>WORDS: ${item.metadata.word_count}</span>
-                            <span>CLUSTER: ${item.metadata.cluster_id}</span>
-                        </div>
+                let formattedHtml = `
+                    <div class="mb-6 bg-slate-900/80 p-6 rounded-xl border border-blue-500/30 result-enter">
+                        <div class="text-xs text-blue-400 font-bold uppercase tracking-widest mb-2">Clean Result Summary</div>
+                        <div class="text-slate-200 whitespace-pre-wrap break-all font-sans leading-relaxed">${data.result.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>
                     </div>
-                `).join('');
+                    <div class="mt-8">
+                        <h3 class="text-sm font-bold text-slate-500 uppercase tracking-widest mb-4">Detailed Matches</h3>
+                        ${data.results_detail.map((item, idx) => `
+                            <div class="mb-4 bg-slate-900/40 p-5 rounded-lg border border-slate-800 result-enter" style="animation-delay: ${idx * 0.1}s">
+                                <div class="flex justify-between items-start mb-2 border-b border-slate-800 pb-2">
+                                    <span class="text-[10px] text-slate-500">ID: ${item.id}</span>
+                                    <span class="text-[10px] font-bold text-emerald-500">${(item.similarity * 100).toFixed(1)}% SIM</span>
+                                </div>
+                                <div class="text-slate-400 text-xs whitespace-pre-wrap break-all">${item.text.substring(0, 300).replace(/</g, '&lt;').replace(/>/g, '&gt;')}...</div>
+                                <div class="mt-2 flex gap-3 text-[9px] text-slate-600 font-bold uppercase">
+                                    <span>${item.metadata.category}</span>
+                                    <span>${item.metadata.word_count} words</span>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
                 
                 document.getElementById('textContent').innerHTML = formattedHtml;
                 container.classList.remove('hidden');

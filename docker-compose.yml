@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   semantic-search:
     build: .
@@ -12,6 +10,9 @@ services:
     environment:
       # Tunable similarity threshold for the semantic cache
       - SIMILARITY_THRESHOLD=0.85
+      # Disable ChromaDB telemetry to prevent 'Failed to send telemetry event' errors
+      - ANONYMIZED_TELEMETRY=FALSE
+      - CHROMA_TELEMETRY_IMPL=none
     # Automatically restart the service unless it's explicitly stopped.
     restart: unless-stopped
 

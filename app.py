@@ -45,7 +45,8 @@ class QueryResponse(BaseModel):
     cache_hit: bool
     matched_query: Optional[str] = None
     similarity_score: Optional[float] = None
-    result: List[SearchResult]
+    result: str # Reverted to string as per spec
+    results_detail: List[SearchResult] = Field(default=[], alias="results_detail") # Internal depth
     dominant_cluster: int
     dominant_cluster_name: str
     cluster_distribution: List[float]
@@ -54,12 +55,12 @@ class QueryResponse(BaseModel):
     similarity_to_centroid: Optional[float] = None
 
 class StatsResponse(BaseModel):
-    hits: int
-    misses: int
-    evictions: int
+    total_entries: int # Renamed from size
+    hit_count: int     # Renamed from hits
+    miss_count: int    # Renamed from misses
     hit_rate: float
-    size: int
-    per_cluster_hits: Dict[str, int]
+    evictions: int = 0
+    per_cluster_hits: Dict[str, int] = {}
 
 class FlushResponse(BaseModel):
     message: str
@@ -86,11 +87,9 @@ app_state = {
 async def lifespan(app: FastAPI):
     """
     Handles startup and shutdown of the FastAPI service.
-    Loads all heavy assets (embeddings, docs, models, vector store) into memory once.
     """
     print("Initializing Semantic Search Service...")
     
-    # 1. Load data assets
     try:
         with open('cleaned_docs.pkl', 'rb') as f:
             app_state["cleaned_docs"] = pickle.load(f)
@@ -98,10 +97,8 @@ async def lifespan(app: FastAPI):
         with open('cluster_results.pkl', 'rb') as f:
             app_state["cluster_results"] = pickle.load(f)
             
-        # 2. Initialize Model
         app_state["model"] = SentenceTransformer('all-MiniLM-L6-v2')
         
-        # 3. Initialize ChromaDB
         from chromadb.config import Settings
         chroma_client = chromadb.PersistentClient(
             path="./chroma_store",
@@ -110,7 +107,7 @@ async def lifespan(app: FastAPI):
         app_state["chroma_collection"] = chroma_client.get_collection(name="newsgroups")
         
         # 4. Update ChromaDB Metadata with Cluster Info
-        print("Syncing cluster metadata with ChromaDB (this may take a moment)...")
+        print("Syncing cluster metadata with ChromaDB...")
         dominant_clusters = app_state["cluster_results"]["dominant_clusters"]
         ids = [doc['doc_id'] for doc in app_state["cleaned_docs"]]
         metadatas = [{"dominant_cluster": int(dominant_clusters[i])} for i in range(len(ids))]
@@ -122,7 +119,6 @@ async def lifespan(app: FastAPI):
                 metadatas=metadatas[i:i+batch_size]
             )
 
-        # 5. Initialize Semantic Cache
         threshold = float(os.getenv("SIMILARITY_THRESHOLD", 0.85))
         app_state["cache"] = SemanticCache(similarity_threshold=threshold)
         print(f"Service ready with similarity_threshold={threshold}.")
@@ -144,44 +140,39 @@ async def serve_ui():
 
 @app.post("/query", response_model=QueryResponse)
 async def perform_search(request: QueryRequest):
-    """
-    Performs a semantic search with caching and detailed result metadata.
-    """
     start_time = time.time()
     try:
         query_text = request.query
-        
-        # a) Embed query
         query_embedding = app_state["model"].encode(query_text)
         
-        # b) Determine dominant cluster
         dominant_cluster = app_state["cache"].get_dominant_cluster(query_embedding)
         distribution = app_state["cache"].get_cluster_distribution(query_embedding)
         cluster_name = CLUSTER_NAMES.get(dominant_cluster, "General Topics")
         
-        # c) Cache Lookup
         cache_entry = app_state["cache"].lookup(query_embedding, dominant_cluster)
         
         if cache_entry:
             duration = round((time.time() - start_time) * 1000, 2)
             sim = float(app_state["cache"]._cosine_similarity(query_embedding, cache_entry.query_embedding))
-            results = [SearchResult(**r) for r in cache_entry.results]
+            
+            # Combine text for the "result" string field
+            result_str = "\n---\n".join([r['text'] for r in cache_entry.results])
             
             return QueryResponse(
                 query=query_text,
                 cache_hit=True,
                 matched_query=cache_entry.query_text,
                 similarity_score=round(sim, 4),
-                result=results,
+                result=result_str,
+                results_detail=[SearchResult(**r) for r in cache_entry.results],
                 dominant_cluster=dominant_cluster,
                 dominant_cluster_name=cluster_name,
                 cluster_distribution=distribution,
                 response_time_ms=duration,
-                cache_hit_cluster=dominant_cluster,
-                similarity_to_centroid=None
+                cache_hit_cluster=dominant_cluster
             )
         
-        # d) Cache Miss: Query ChromaDB
+        # Cache Miss
         n_results = 3
         results = app_state["chroma_collection"].query(
             query_embeddings=[query_embedding.tolist()],
@@ -189,7 +180,6 @@ async def perform_search(request: QueryRequest):
             where={"dominant_cluster": dominant_cluster}
         )
         
-        # e) Format results
         search_results = []
         for i in range(len(results['ids'][0])):
             doc_id = results['ids'][0][i]
@@ -199,7 +189,7 @@ async def perform_search(request: QueryRequest):
             
             search_results.append({
                 "id": doc_id,
-                "text": text[:500],
+                "text": text,
                 "metadata": {
                     "category": meta.get("original_category", "unknown"),
                     "word_count": len(text.split()),
@@ -209,23 +199,19 @@ async def perform_search(request: QueryRequest):
             })
         
         duration = round((time.time() - start_time) * 1000, 2)
+        result_str = "\n---\n".join([r['text'][:500] for r in search_results])
         
-        # f) Store in cache
         app_state["cache"].store(query_text, query_embedding, dominant_cluster, search_results, distribution)
         
-        # g) Return
         return QueryResponse(
             query=query_text,
             cache_hit=False,
-            matched_query=None,
-            similarity_score=None,
-            result=[SearchResult(**r) for r in search_results],
+            result=result_str,
+            results_detail=[SearchResult(**r) for r in search_results],
             dominant_cluster=dominant_cluster,
             dominant_cluster_name=cluster_name,
             cluster_distribution=distribution,
-            response_time_ms=duration,
-            cache_hit_cluster=None,
-            similarity_to_centroid=None
+            response_time_ms=duration
         )
         
     except Exception as e:
@@ -235,7 +221,15 @@ async def perform_search(request: QueryRequest):
 async def get_cache_stats():
     if not app_state["cache"]:
         raise HTTPException(status_code=503, detail="Cache not initialized")
-    return app_state["cache"].get_stats()
+    stats = app_state["cache"].get_stats()
+    return StatsResponse(
+        total_entries=stats['size'],
+        hit_count=stats['hits'],
+        miss_count=stats['misses'],
+        hit_rate=stats['hit_rate'],
+        evictions=stats['evictions'],
+        per_cluster_hits=stats['per_cluster_hits']
+    )
 
 @app.delete("/cache", response_model=FlushResponse)
 async def flush_cache():

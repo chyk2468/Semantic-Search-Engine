@@ -1,0 +1,10 @@
+venv/
+dataset/
+__pycache__/
+*.png
+boundary_cases.txt
+.git/
+.gitignore
+setup.bat
+run.bat
+process_data.bat

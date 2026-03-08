@@ -18,13 +18,20 @@ from tqdm import tqdm
 def clean_text(text: str) -> str:
     """
     Cleans the raw newsgroup text by stripping headers and metadata.
+    Follows a two-pass approach:
+    1. Skip everything until the first double-newline (common newsgroup body start).
+    2. Filter remaining lines for stray header prefixes.
     """
-    lines = text.split('\n')
+    # Pass 1: Find body start
+    parts = text.split('\n\n', 1)
+    if len(parts) > 1:
+        body = parts[1]
+    else:
+        body = text
+        
+    lines = body.split('\n')
     cleaned_lines = []
     
-    # Prefix list to strip headers as requested
-    # Decision: Strip headers because they contain metadata (emails, hosts, subjects) 
-    # that can skew semantic similarity towards structural patterns rather than content.
     strip_prefixes = (
         'From:', 'Subject:', 'Organization:', 'Lines:', 
         'NNTP-Posting-Host:', 'X-', 'Path:', 'Newsgroups:',
@@ -33,18 +40,9 @@ def clean_text(text: str) -> str:
         'Article-I.D.:', 'Originator:', 'Nntp-Posting-Host:'
     )
     
-    in_header = True
     for line in lines:
-        # If we hit an empty line, we assume the header block is done
-        if in_header and not line.strip():
-            in_header = False
-            continue
-            
-        # Strip lines that match known prefixes even outside the main header block
-        # just to be safe, or skip the entire header block.
         if any(line.startswith(prefix) for prefix in strip_prefixes):
             continue
-            
         cleaned_lines.append(line)
         
     cleaned_text = '\n'.join(cleaned_lines).strip()
@@ -58,11 +56,8 @@ def main():
 
     raw_docs = []
     print("Walking dataset directory...")
-    # Walk recursively to find all .txt files
-    # Parent folder name is the category
     for file_path in tqdm(list(dataset_root.rglob('*.txt'))):
         try:
-            # Using latin-1 encoding as it's more robust for old newsgroup data
             with open(file_path, 'r', encoding='latin-1') as f:
                 content = f.read()
                 category = file_path.parent.name
@@ -76,25 +71,21 @@ def main():
 
     print(f"Loaded {len(raw_docs)} raw documents.")
 
-    # Cleaning and De-duplication
+    # Step 2: PREPROCESS FIRST
     cleaned_docs = []
     seen_texts = set()
     discarded_short = 0
     discarded_duplicate = 0
 
-    print("Cleaning corpus...")
+    print("Cleaning corpus (stripping headers, de-duplicating)...")
     for doc in tqdm(raw_docs):
+        # 2.1 CLEAN TEXT BEFORE EMBEDDING
         cleaned_content = clean_text(doc['text'])
         
-        # Decision: Remove posts shorter than 50 characters after cleaning.
-        # Rationale: Very short posts (e.g., "Thanks!", "I agree") lack enough semantic 
-        # information to be useful for search or meaningful embeddings.
         if len(cleaned_content) < 50:
             discarded_short += 1
             continue
             
-        # Decision: Remove duplicate documents (exact text match).
-        # Rationale: Exact duplicates inflate the index and can bias search results.
         if cleaned_content in seen_texts:
             discarded_duplicate += 1
             continue
@@ -104,33 +95,26 @@ def main():
         doc_id = f"doc_{len(cleaned_docs)}"
         cleaned_docs.append({
             'doc_id': doc_id,
-            'text': cleaned_content,
+            'text': cleaned_content, # Storing CLEAN text
             'category': doc['category'],
             'source_file': doc['source_file']
         })
 
-    total_kept = len(cleaned_docs)
-    total_discarded = discarded_short + discarded_duplicate
-    print(f"Final corpus stats:")
-    print(f"  Total docs kept: {total_kept}")
-    print(f"  Total discarded: {total_discarded} (Short: {discarded_short}, Duplicates: {discarded_duplicate})")
+    print(f"Final corpus stats: Kept {len(cleaned_docs)}, Discarded {discarded_short + discarded_duplicate}")
 
-    # Embedding Generation
-    print("Generating embeddings using 'all-MiniLM-L6-v2'...")
+    # Step 3: Embed the CLEAN text only
+    print("Generating embeddings for CLEAN text using 'all-MiniLM-L6-v2'...")
     model = SentenceTransformer('all-MiniLM-L6-v2')
     texts_to_embed = [doc['text'] for doc in cleaned_docs]
     embeddings = model.encode(texts_to_embed, show_progress_bar=True)
     
-    print(f"Embedding shape: {embeddings.shape}")
-
-    # Persistence: ChromaDB
-    print("Persisting to ChromaDB...")
+    # Step 5: Store CLEAN docs in ChromaDB
+    print("Persisting CLEAN documents to ChromaDB...")
     from chromadb.config import Settings
     chroma_client = chromadb.PersistentClient(
         path="./chroma_store",
         settings=Settings(anonymized_telemetry=False)
     )
-    # Delete existing collection if it exists to ensure a fresh start as per Phase 1 requirements
     try:
         chroma_client.delete_collection("newsgroups")
     except:
@@ -138,14 +122,13 @@ def main():
     
     collection = chroma_client.create_collection(name="newsgroups")
     
-    # Add documents in batches to ChromaDB
     batch_size = 5000
     for i in range(0, len(cleaned_docs), batch_size):
         batch = cleaned_docs[i : i + batch_size]
         batch_embeddings = embeddings[i : i + batch_size].tolist()
         batch_ids = [d['doc_id'] for d in batch]
-        batch_metadatas = [{'doc_id': d['doc_id'], 'original_category': d['category'], 'cleaned_text': d['text'][:1000]} for d in batch]
-        batch_documents = [d['text'] for d in batch]
+        batch_metadatas = [{'doc_id': d['doc_id'], 'original_category': d['category'], 'cleaned_text': d['text'][:500]} for d in batch]
+        batch_documents = [d['text'] for d in batch] # Adding CLEAN text to ChromaDB
         
         collection.add(
             ids=batch_ids,
@@ -154,7 +137,6 @@ def main():
             documents=batch_documents
         )
 
-    # Save outputs for Phase 2
     print("Saving output files...")
     np.save('embeddings.npy', embeddings)
     with open('cleaned_docs.pkl', 'wb') as f:
