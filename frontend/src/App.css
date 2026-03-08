@@ -18,14 +18,73 @@ header {
   margin-bottom: 2rem;
 }
 
-.theme-toggle-btn {
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  border: 1px solid #ccc;
-  background: var(--button-bg);
-  color: var(--color);
+.theme-switch-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.theme-switch {
+  display: inline-block;
+  height: 34px;
+  position: relative;
+  width: 60px;
+}
+
+.theme-switch input {
+  display:none;
+}
+
+.slider {
+  background-color: #333;
+  bottom: 0;
   cursor: pointer;
-  font-size: 0.9rem;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transition: .4s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slider:before {
+  background-color: #fff;
+  bottom: 4px;
+  content: "";
+  height: 26px;
+  left: 4px;
+  position: absolute;
+  transition: .4s;
+  width: 26px;
+  z-index: 2;
+}
+
+input:checked + .slider {
+  background-color: #646cff;
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+.slider .icon {
+  position: absolute;
+  font-size: 14px;
+  z-index: 1;
+  transition: .4s;
+}
+
+[data-theme='light'] .slider {
+  background-color: #ccc;
 }
 
 .search-form {

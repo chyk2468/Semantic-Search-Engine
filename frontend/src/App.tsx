@@ -67,9 +67,19 @@ function App() {
     <div className="app-container">
       <header>
         <h1>Semantic Search Engine</h1>
-        <button className="theme-toggle-btn" onClick={toggleTheme}>
-          {theme === 'dark' ? '☀️ Light' : '🌙 Dark'}
-        </button>
+        <div className="theme-switch-wrapper">
+          <label className="theme-switch" htmlFor="checkbox">
+            <input
+              type="checkbox"
+              id="checkbox"
+              onChange={toggleTheme}
+              checked={theme === 'light'}
+            />
+            <div className="slider round">
+              <span className="icon">{theme === 'light' ? '☀️' : '🌙'}</span>
+            </div>
+          </label>
+        </div>
       </header>
 
       <main>
