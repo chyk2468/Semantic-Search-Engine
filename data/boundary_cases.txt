@@ -1,0 +1,303 @@
+Top 50 Most Uncertain Documents (Boundary Cases)
+==================================================
+
+Doc ID: doc_13320
+Uncertainty: 0.7270
+Top 2 Memberships: Cluster 2 (0.2730), Cluster 0 (0.2485)
+Category: sci.med
+Snippet: todamhyp@charles.unlv.edu (Brian M. Huey) writes:  >I think that's the correct spelling.. >	I am looking for any information/supplies that will allow >do-it-yourselfers to take Krillean Pictures. I'm ...
+------------------------------
+Doc ID: doc_13542
+Uncertainty: 0.7249
+Top 2 Memberships: Cluster 2 (0.2751), Cluster 0 (0.2481)
+Category: sci.med
+Snippet: In article <1993Apr26.204319.11231@ultb.isc.rit.edu>, eas3714@ultb.isc.rit.edu (E.A. Story) writes: >In article <1rgrsvINNmpr@gap.caltech.edu> carl@SOL1.GPS.CALTECH.EDU writes: >>[..] It >>involves ta...
+------------------------------
+Doc ID: doc_13454
+Uncertainty: 0.7248
+Top 2 Memberships: Cluster 2 (0.2752), Cluster 0 (0.2481)
+Category: sci.med
+Snippet: In article <1rgrsvINNmpr@gap.caltech.edu> carl@SOL1.GPS.CALTECH.EDU writes: >Greg:Flame definitely intended here.  Bill was making fun of the misspelling.  >Go look up the word "krill."  Also, the cor...
+------------------------------
+Doc ID: doc_13633
+Uncertainty: 0.7248
+Top 2 Memberships: Cluster 2 (0.2752), Cluster 0 (0.2483)
+Category: sci.med
+Snippet: In article <C67G01.2J1@efi.com>, alanm@efi.com (Alan Morgan) writes: -| In article <C65oIL.436@vuse.vanderbilt.edu>  -|   alex@vuse.vanderbilt.edu (Alexander P. Zijdenbos) writes: -| Okay.  Name one s...
+------------------------------
+Doc ID: doc_13535
+Uncertainty: 0.7247
+Top 2 Memberships: Cluster 2 (0.2753), Cluster 0 (0.2483)
+Category: sci.med
+Snippet: In article <1993Apr26.204319.11231@ultb.isc.rit.edu> eas3714@ultb.isc.rit.edu (E.A. Story) writes: >In article <1rgrsvINNmpr@gap.caltech.edu> carl@SOL1.GPS.CALTECH.EDU writes: >>Greg:Flame definitely ...
+------------------------------
+Doc ID: doc_13506
+Uncertainty: 0.7247
+Top 2 Memberships: Cluster 2 (0.2753), Cluster 0 (0.2481)
+Category: sci.med
+Snippet: In article <1993Apr26.204319.11231@ultb.isc.rit.edu>, eas3714@ultb.isc.rit.edu (E.A. Story) writes: =In article <1rgrsvINNmpr@gap.caltech.edu> carl@SOL1.GPS.CALTECH.EDU writes: =>Greg:Flame definitely...
+------------------------------
+Doc ID: doc_13471
+Uncertainty: 0.7246
+Top 2 Memberships: Cluster 2 (0.2754), Cluster 0 (0.2482)
+Category: sci.med
+Snippet: In article <1993Apr26.204319.11231@ultb.isc.rit.edu>, E.A. Story (eas3714@ultb.isc.rit.edu) wrote: > In article <1rgrsvINNmpr@gap.caltech.edu> carl@SOL1.GPS.CALTECH.EDU writes: > >Greg:Flame definitel...
+------------------------------
+Doc ID: doc_13539
+Uncertainty: 0.7246
+Top 2 Memberships: Cluster 2 (0.2754), Cluster 0 (0.2483)
+Category: sci.med
+Snippet: In article <1rk5miINNkju@usenet.pa.dec.com>, stark@dwovax.enet.dec.com (Todd I. Stark) writes: =>Yup.  The demonstration to which you refer consists of placing a leaf between =>the plates, and taking ...
+------------------------------
+Doc ID: doc_13124
+Uncertainty: 0.7245
+Top 2 Memberships: Cluster 2 (0.2755), Cluster 0 (0.2481)
+Category: sci.med
+Snippet: In article <1993Apr19.205615.1013@unlv.edu>, todamhyp@charles.unlv.edu (Brian M. Huey) writes: > I think that's the correct spelling..  The proper spelling is Kirlian. It was an effect discoverd by S....
+------------------------------
+Doc ID: doc_13520
+Uncertainty: 0.7241
+Top 2 Memberships: Cluster 2 (0.2759), Cluster 0 (0.2480)
+Category: sci.med
+Snippet: In article <1rjr1uINNh8@gap.caltech.edu>, carl@SOL1.GPS.CALTECH.EDU (Carl J Lydick) writes... >In article <1993Apr26.204319.11231@ultb.isc.rit.edu>, eas3714@ultb.isc.rit.edu (E.A. Story) writes: >=In ...
+------------------------------
+Doc ID: doc_13420
+Uncertainty: 0.7240
+Top 2 Memberships: Cluster 2 (0.2760), Cluster 0 (0.2491)
+Category: sci.med
+Snippet: Poor person's Kirlian Photography (try this at home)  1. Hold your hand up to a cold window. 2. Look closely at the stunning corona effects around    your fingertips. 3. Remove hand (from window) and ...
+------------------------------
+Doc ID: doc_13292
+Uncertainty: 0.7240
+Top 2 Memberships: Cluster 2 (0.2760), Cluster 0 (0.2489)
+Category: sci.med
+Snippet: In article <1993Apr19.205615.1013@unlv.edu> todamhyp@charles.unlv.edu (Brian M. Huey) writes:   >In article <1993Apr19.205615.1013@unlv.edu>, todamhyp@charles.unlv.edu (Brian M. Huey) writes: >> I thi...
+------------------------------
+Doc ID: doc_13515
+Uncertainty: 0.7239
+Top 2 Memberships: Cluster 2 (0.2761), Cluster 0 (0.2503)
+Category: sci.med
+Snippet: In article <1993Apr26.120417.22328@linus.mitre.org> gpivar@mitre.org(The Pancake Emporium) writes: >In article <1993Apr22.211005.21578@scorch.apana.org.au>, bill@scorch.apana.org.au (Bill Dowding) wri...
+------------------------------
+Doc ID: doc_13429
+Uncertainty: 0.7239
+Top 2 Memberships: Cluster 2 (0.2761), Cluster 0 (0.2506)
+Category: sci.med
+Snippet: In article <1993Apr26.120417.22328@linus.mitre.org>, gpivar@maestro.mitre.org (Greg Pivarnik) writes: =In article <1993Apr22.211005.21578@scorch.apana.org.au>, bill@scorch.apana.org.au (Bill Dowding) ...
+------------------------------
+Doc ID: doc_13133
+Uncertainty: 0.7238
+Top 2 Memberships: Cluster 2 (0.2762), Cluster 0 (0.2505)
+Category: sci.med
+Snippet: [Newsgroups: m.h.a added, followups set to most appropriate groups.]  In <1993Apr19.205615.1013@unlv.edu> todamhyp@charles.unlv.edu (Brian M. Huey) writes:  >I am looking for any information/supplies ...
+------------------------------
+Doc ID: doc_13196
+Uncertainty: 0.7237
+Top 2 Memberships: Cluster 2 (0.2763), Cluster 0 (0.2492)
+Category: sci.med
+Snippet: I think he means Girlie Photography.  A good place to find it is in non-descript little places that usually just say "Books" on the outside of the building in black and white.   --                    ...
+------------------------------
+Doc ID: doc_13427
+Uncertainty: 0.7236
+Top 2 Memberships: Cluster 2 (0.2764), Cluster 0 (0.2494)
+Category: sci.med
+Snippet: In article <1rgnn6$lli@fnnews.fnal.gov> dh@fncrd6.fnal.gov (don husby) writes: > >Poor person's Kirlian Photography (try this at home) > >1. Hold your hand up to a cold window. >2. Look closely at the...
+------------------------------
+Doc ID: doc_13467
+Uncertainty: 0.7235
+Top 2 Memberships: Cluster 2 (0.2765), Cluster 0 (0.2498)
+Category: sci.med
+Snippet: In article <MMEYER.93Apr26102056@m2.dseg.ti.com> mmeyer@m2.dseg.ti.com (Mark Meyer) writes: >	Besides, Kirilian photography is actually photography of my >friend's two-year-old son Kiril.  Perhaps you...
+------------------------------
+Doc ID: doc_13147
+Uncertainty: 0.7235
+Top 2 Memberships: Cluster 2 (0.2765), Cluster 0 (0.2502)
+Category: sci.med
+Snippet: In article <1993Apr19.205615.1013@unlv.edu> todamhyp@charles.unlv.edu (Brian M. Huey) writes: >I think that's the correct spelling..  Crullerian.  >	I am looking for any information/supplies that will...
+------------------------------
+Doc ID: doc_13419
+Uncertainty: 0.7234
+Top 2 Memberships: Cluster 2 (0.2766), Cluster 0 (0.2507)
+Category: sci.med
+Snippet: In article <1993Apr22.211005.21578@scorch.apana.org.au>, bill@scorch.apana.org.au (Bill Dowding) writes: |> todamhyp@charles.unlv.edu (Brian M. Huey) writes: |>  |> >I think that's the correct spellin...
+------------------------------
+Doc ID: doc_13547
+Uncertainty: 0.7234
+Top 2 Memberships: Cluster 2 (0.2766), Cluster 0 (0.2516)
+Category: sci.med
+Snippet: In article <1993Apr26.120417.22328@linus.mitre.org> gpivar@mitre.org(The Pancake Emporium) writes: >In article <1993Apr22.211005.21578@scorch.apana.org.au>, bill@scorch.apana.org.au (Bill Dowding) wri...
+------------------------------
+Doc ID: doc_13584
+Uncertainty: 0.7234
+Top 2 Memberships: Cluster 2 (0.2766), Cluster 0 (0.2498)
+Category: sci.med
+Snippet: In article <C64FuM.5B8@news.claremont.edu> ebrandt@jarthur.claremont.edu (Eli Brandt) writes: >In article <MMEYER.93Apr26102056@m2.dseg.ti.com> mmeyer@m2.dseg.ti.com (Mark Meyer) writes: >>	Besides, K...
+------------------------------
+Doc ID: doc_13249
+Uncertainty: 0.7234
+Top 2 Memberships: Cluster 2 (0.2766), Cluster 0 (0.2504)
+Category: sci.med
+Snippet: >I did a science project on Kirlian photography when I was in high school. >I was able to obtain wonderful auras from rocks and pebbles and the like by >first dunking them in water. >   I know this is...
+------------------------------
+Doc ID: doc_13433
+Uncertainty: 0.7231
+Top 2 Memberships: Cluster 2 (0.2769), Cluster 0 (0.2499)
+Category: sci.med
+Snippet: In article <1993Apr22.211005.21578@scorch.apana.org.au>, bill@scorch.apana.org.au (Bill Dowding) writes: > Krillean photography involves taking pictures of minute decapods > resident in the seas surro...
+------------------------------
+Doc ID: doc_13202
+Uncertainty: 0.7231
+Top 2 Memberships: Cluster 2 (0.2769), Cluster 0 (0.2508)
+Category: sci.med
+Snippet: In-reply-to: todamhyp@charles.unlv.edu's message of Mon, 19 Apr 93 20:56:15 GMT --text follows this line-- todamhyp@charles.unlv.edu (Brian M. Huey) writes:  	   I am looking for any information/suppl...
+------------------------------
+Doc ID: doc_2614
+Uncertainty: 0.7230
+Top 2 Memberships: Cluster 1 (0.2770), Cluster 4 (0.2428)
+Category: comp.os.ms-windows.misc
+Snippet: >>  The RISC means "reduced instruction set computer". The RISC usually has  >>small instruction set so as to reduce the circuit complex and can increase  >>the clock rate to have a high performance. ...
+------------------------------
+Doc ID: doc_2585
+Uncertainty: 0.7230
+Top 2 Memberships: Cluster 1 (0.2770), Cluster 4 (0.2428)
+Category: comp.os.ms-windows.misc
+Snippet: In article <C5o1yq.M34@csie.nctu.edu.tw> ghhwang@csie.nctu.edu.tw (ghhwang) writes: > >Dear friend, >  The RISC means "reduced instruction set computer". The RISC usually has  >small instruction set s...
+------------------------------
+Doc ID: doc_2599
+Uncertainty: 0.7230
+Top 2 Memberships: Cluster 1 (0.2770), Cluster 4 (0.2428)
+Category: comp.os.ms-windows.misc
+Snippet: In article <1qu8ud$2hd@sunb.ocs.mq.edu.au>, eugene@mpce.mq.edu.au writes: >In article <C5o1yq.M34@csie.nctu.edu.tw> ghhwang@csie.nctu.edu.tw (ghhwang) writes: >> >>Dear friend, >>  The RISC means "red...
+------------------------------
+Doc ID: doc_2628
+Uncertainty: 0.7230
+Top 2 Memberships: Cluster 1 (0.2770), Cluster 4 (0.2428)
+Category: comp.os.ms-windows.misc
+Snippet: In article <1qu8ud$2hd@sunb.ocs.mq.edu.au> eugene@mpce.mq.edu.au writes: >In article <C5o1yq.M34@csie.nctu.edu.tw> ghhwang@csie.nctu.edu.tw (ghhwang) writes: >> >>Dear friend, >>  The RISC means "redu...
+------------------------------
+Doc ID: doc_2668
+Uncertainty: 0.7230
+Top 2 Memberships: Cluster 1 (0.2770), Cluster 4 (0.2428)
+Category: comp.os.ms-windows.misc
+Snippet: In article <C5o1yq.M34@csie.nctu.edu.tw> ghhwang@csie.nctu.edu.tw (ghhwang) writes:  >   Dear friend, >     The RISC means "reduced instruction set computer". The RISC usually has  >   small instructi...
+------------------------------
+Doc ID: doc_2796
+Uncertainty: 0.7230
+Top 2 Memberships: Cluster 1 (0.2770), Cluster 4 (0.2428)
+Category: comp.os.ms-windows.misc
+Snippet: In article <C5rx8B.Kzp@ecf.toronto.edu> leebr@ecf.toronto.edu (LEE BRIAN) writes: >In article <1qu8ud$2hd@sunb.ocs.mq.edu.au> eugene@mpce.mq.edu.au writes: >>In article <C5o1yq.M34@csie.nctu.edu.tw> g...
+------------------------------
+Doc ID: doc_11632
+Uncertainty: 0.7230
+Top 2 Memberships: Cluster 1 (0.2770), Cluster 4 (0.2428)
+Category: sci.crypt
+Snippet: The RISC processor made by Fairchild, sold to Intergraph, much the same story as the R4000.  Remember how Spielberg lost the control of Star Wars when the DOD started using the name? The loss was conf...
+------------------------------
+Doc ID: doc_2559
+Uncertainty: 0.7230
+Top 2 Memberships: Cluster 1 (0.2770), Cluster 4 (0.2428)
+Category: comp.os.ms-windows.misc
+Snippet: Dear friend,   The RISC means "reduced instruction set computer". The RISC usually has  small instruction set so as to reduce the circuit complex and can increase  the clock rate to have a high perfor...
+------------------------------
+Doc ID: doc_2676
+Uncertainty: 0.7230
+Top 2 Memberships: Cluster 1 (0.2770), Cluster 4 (0.2428)
+Category: comp.os.ms-windows.misc
+Snippet: leebr@ecf.toronto.edu (LEE BRIAN) writes: : In article <1qu8ud$2hd@sunb.ocs.mq.edu.au> eugene@mpce.mq.edu.au writes: : >In article <C5o1yq.M34@csie.nctu.edu.tw> ghhwang@csie.nctu.edu.tw (ghhwang) writ...
+------------------------------
+Doc ID: doc_13117
+Uncertainty: 0.7229
+Top 2 Memberships: Cluster 2 (0.2771), Cluster 0 (0.2495)
+Category: sci.med
+Snippet: I think that's the correct spelling.. 	I am looking for any information/supplies that will allow do-it-yourselfers to take Krillean Pictures. I'm thinking that education suppliers for schools might ha...
+------------------------------
+Doc ID: doc_2823
+Uncertainty: 0.7229
+Top 2 Memberships: Cluster 1 (0.2771), Cluster 4 (0.2428)
+Category: comp.os.ms-windows.misc
+Snippet: In article <C5w9J7.JLL@Nyongwa.CAM.ORG> angcl@Nyongwa.CAM.ORG (Claude Angers) writes: >In article <C5rx8B.Kzp@ecf.toronto.edu> leebr@ecf.toronto.edu (LEE BRIAN) writes: >>In article <1qu8ud$2hd@sunb.o...
+------------------------------
+Doc ID: doc_13390
+Uncertainty: 0.7226
+Top 2 Memberships: Cluster 2 (0.2774), Cluster 0 (0.2499)
+Category: sci.med
+Snippet: In article <20APR199315574161@vxcrna.cern.ch> filipe@vxcrna.cern.ch (VINCI) writes:  > How about Kirlian imaging ? I believe the FAQ for sci.skeptics (sp?) > has a nice write-up on this. They would ce...
+------------------------------
+Doc ID: doc_13775
+Uncertainty: 0.7221
+Top 2 Memberships: Cluster 2 (0.2779), Cluster 4 (0.2601)
+Category: sci.space
+Snippet: I have the "osculating elements at perigee" of an orbit, which I need to convert to something useful, preferably distance from the earth in evenly spaced time intervals. A GSM coordinate system is pre...
+------------------------------
+Doc ID: doc_14205
+Uncertainty: 0.7220
+Top 2 Memberships: Cluster 2 (0.2780), Cluster 4 (0.2585)
+Category: sci.space
+Snippet: In article <1r6f3a$2ai@news.umbc.edu> rouben@math9.math.umbc.edu (Rouben Rostamian) writes: >>Hello. I am looking for a program (or algorithm) that can be used >>to compute sunrise and sunset times. >...
+------------------------------
+Doc ID: doc_14080
+Uncertainty: 0.7220
+Top 2 Memberships: Cluster 2 (0.2780), Cluster 4 (0.2587)
+Category: sci.space
+Snippet: Hello. I am looking for a program (or algorithm) that can be used to compute sunrise and sunset times.  I would appreciate any advice.  Joe Wetstein jpw@coe.drexel.edu...
+------------------------------
+Doc ID: doc_14244
+Uncertainty: 0.7219
+Top 2 Memberships: Cluster 2 (0.2781), Cluster 4 (0.2586)
+Category: sci.space
+Snippet: There is a nice little tool in Lucid emacs. It's called "calendar". On request it shows for given longitude/latitude coordinates times for sunset and sunrise. The code is written in lisp. I don't know...
+------------------------------
+Doc ID: doc_14177
+Uncertainty: 0.7218
+Top 2 Memberships: Cluster 2 (0.2782), Cluster 4 (0.2585)
+Category: sci.space
+Snippet: jpw@cbis.ece.drexel.edu (Joseph Wetstein) writes:   >Hello. I am looking for a program (or algorithm) that can be used >to compute sunrise and sunset times.  Would you mind posting the responses you g...
+------------------------------
+Doc ID: doc_14155
+Uncertainty: 0.7217
+Top 2 Memberships: Cluster 2 (0.2783), Cluster 4 (0.2586)
+Category: sci.space
+Snippet: In article <1993Apr21.141824.23536@cbis.ece.drexel.edu> jpw@cbis.ece.drexel.edu (Joseph Wetstein) writes: > >Hello. I am looking for a program (or algorithm) that can be used >to compute sunrise and s...
+------------------------------
+Doc ID: doc_13425
+Uncertainty: 0.7217
+Top 2 Memberships: Cluster 2 (0.2783), Cluster 0 (0.2481)
+Category: sci.med
+Snippet: In article <1993Apr26.120417.22328@linus.mitre.org>, gpivar@maestro.mitre.org (Greg Pivarnik) writes:    |> In article <1993Apr22.211005.21578@scorch.apana.org.au>, bill@scorch.apana.org.au (Bill Dowd...
+------------------------------
+Doc ID: doc_14303
+Uncertainty: 0.7215
+Top 2 Memberships: Cluster 2 (0.2785), Cluster 4 (0.2586)
+Category: sci.space
+Snippet: In article <1r6f3a$2ai@news.umbc.edu> rouben@math9.math.umbc.edu (Rouben Rostamian) writes: >how the length of the daylight varies with the time of the year. >Experiment with various choices of latitu...
+------------------------------
+Doc ID: doc_14154
+Uncertainty: 0.7214
+Top 2 Memberships: Cluster 2 (0.2786), Cluster 4 (0.2601)
+Category: sci.space
+Snippet: A related question (which I haven't given that much serious thought  to): at what lattitude is the average length of the day (averaged  over the whole year) maximized? Is this function a constant= 12 ...
+------------------------------
+Doc ID: doc_14246
+Uncertainty: 0.7212
+Top 2 Memberships: Cluster 2 (0.2788), Cluster 4 (0.2582)
+Category: sci.space
+Snippet: In article <1993Apr21.141824.23536@cbis.ece.drexel.edu> jpw@cbis.ece.drexel.edu (Joseph Wetstein) writes: > >Hello. I am looking for a program (or algorithm) that can be used >to compute sunrise and s...
+------------------------------
+Doc ID: doc_14241
+Uncertainty: 0.7209
+Top 2 Memberships: Cluster 2 (0.2791), Cluster 4 (0.2587)
+Category: sci.space
+Snippet: In <1993Apr21.141824.23536@cbis.ece.drexel.edu> jpw@cbis.ece.drexel.edu (Joseph Wetstein) writes:  >Hello. I am looking for a program (or algorithm) that can be used >to compute sunrise and sunset tim...
+------------------------------
+Doc ID: doc_13341
+Uncertainty: 0.7209
+Top 2 Memberships: Cluster 2 (0.2791), Cluster 0 (0.2529)
+Category: sci.med
+Snippet: stgprao@st.unocal.COM (Richard Ottolini) writes:  : Living things maintain small electric fields to (1) enhance certain : chemical reactions, (2) promote communication of states with in a : cell, (3) ...
+------------------------------
+Doc ID: doc_13157
+Uncertainty: 0.7207
+Top 2 Memberships: Cluster 2 (0.2793), Cluster 0 (0.2502)
+Category: sci.med
+Snippet: In article <1993Apr19.205615.1013@unlv.edu>, todamhyp@charles.unlv.edu (Brian M. Huey) writes: =I think that's the correct spelling.. =	I am looking for any information/supplies that will allow =do-it...
+------------------------------
