@@ -1,51 +1,73 @@
 # Semantic Search Engine
 
-Search a collection by meaning rather than relying only on exact keyword matches. The project combines a React/Vite frontend, a FastAPI service, Sentence Transformers embeddings, and ChromaDB vector retrieval.
+**Find relevant text by meaning rather than exact keyword matches.**
 
-**Stack:** React, Vite, FastAPI, Sentence Transformers, ChromaDB, Docker
+[![GitHub](https://img.shields.io/badge/GitHub-Source-24292f?logo=github)](https://github.com/chyk2468/Semantic-Search-Engine)
 
-![Semantic Search Engine workflow](docs/readme-architecture.svg)
+## 1. Project Title & Tagline
 
-## Request flow
+Find relevant text by meaning rather than exact keyword matches.
 
-1. The frontend collects a natural-language query.
-2. FastAPI validates the request and creates a query embedding.
-3. The retrieval service checks its semantic cache and searches the vector store.
-4. The API returns matching content and useful retrieval metadata to the frontend.
+## 2. Problem Statement
 
-## Components
+Keyword search can miss useful results when a query and a document use different words for the same idea. Semantic search ranks content by vector similarity.
 
-- `frontend/`: React/Vite interface
-- `backend/app.py`: search API
-- `backend/semantic_cache.py`: semantic caching
-- `scripts/`: embedding and clustering stages
-- `data/`: source dataset and ChromaDB store
-- `docker-compose.yml`: local multi-service setup
+## 3. Project Preview
 
-## Run with Docker
+Add a current screenshot, GIF, or deployed demo link showing the interface and its main interaction.
+
+[Open interactive architecture](architecture.html)
+
+## 4. Overview
+
+The application organises the main workflow into clear stages, from the initial input through processing to the user-facing result.
+
+## 5. Key Features
+
+- Convert text and queries into embeddings.
+- Store searchable document vectors.
+- Retrieve results by semantic similarity.
+- Inspect ranked matches for a query.
+
+## 6. Architecture / Workflow
+
+![Animated Semantic Search Engine workflow](docs/animated-workflow.svg)
+
+Open the [interactive architecture explorer](architecture.html) to select a stage and inspect its role.
+
+## 7. Tech Stack
+
+Python and the embedding, vector-search, and UI libraries specified in the repository
+
+## 8. Installation & Setup
 
 ```bash
 git clone https://github.com/chyk2468/Semantic-Search-Engine.git
 cd Semantic-Search-Engine
-docker compose up --build
+python -m venv .venv
 ```
 
-Open the frontend at `http://localhost:5173`. The backend API is available at `http://localhost:8000`.
+Install the project's requirements and configure the expected data or model paths.
 
-## Run without Docker
+## 9. Usage
 
-Install Python dependencies from `requirements.txt`, process the dataset with the scripts or Windows helper provided, then run the API:
+Run the documented entry point, load or index the corpus, submit a natural-language query, and inspect the ranked passages. Test with paraphrased queries as well as exact keywords.
 
-```bash
-uvicorn backend.app:app --host 0.0.0.0 --port 8000 --reload
-```
+## 10. Project Structure
 
-In a second terminal, start the frontend:
+Start with the main search application, then inspect document loading, embedding generation, vector indexing, and ranking code.
 
-```bash
-cd frontend
-npm install
-npm run dev
-```
+## 11. Results & Demo
 
-Follow the project's data-processing steps before querying a fresh checkout.
+Add a small query set and compare semantic results with keyword search. Report ranking quality only when it has been evaluated on labelled queries.
+
+## 12. Future Enhancements
+
+- Add filters and source metadata.
+- Support incremental indexing.
+- Add a retrieval benchmark with labelled queries.
+- Show why each result was retrieved.
+
+## 13. License
+
+Check the code, embedding model, and source-data licences before redistribution.
